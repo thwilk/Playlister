@@ -1,0 +1,41 @@
+const Song  = require('../models/song-schema');
+
+
+const findSongById = async (id) => {
+    return await Song.findByPk(id);
+};
+
+const findSongsById = async (ids) => { // ids should be an array of songs 
+    const songs = ids.map(id => findSongById(id))
+    return songs;
+};
+
+const createSong = async (title, artist, year, youtubeId) => {
+    const listens = 0;
+    const listenedByGuest = false;
+    const newSong = await Song.create({ title, artist, year, youtubeId, listens, listenedByGuest });
+    
+    return newSong;
+}
+
+const updateSong = async (songId, title, artist, year, youtubeId) => {
+
+    const song = Song.findByPk(songId);
+
+    song.title = title || song.title;
+    song.artist = artist || song.artist;
+    song.year = year || song.year;
+    song.youtubeId = youtubeId || song.youtubeId;
+
+    await song.save();
+
+    return song;
+}
+
+
+module.exports = {
+    findSongById,
+    findSongsById,
+    createSong,
+    updateSong
+}
