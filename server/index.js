@@ -25,7 +25,7 @@ const storeRouter = require('./routes/store-router')
 app.use('/store', storeRouter)
 
 // INITIALIZE OUR DATABASE OBJECT
-require('./db/DBManager.js')
+require('./db/index')
 
 // PUT THE SERVER IN LISTENING MODE
 app.listen(PORT, () => console.log(`Playlister Server running on port ${PORT}`))

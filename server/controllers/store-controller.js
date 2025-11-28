@@ -1,7 +1,7 @@
 // server/controllers/postgres/store-controller.js
-const { formatPlaylist } = require('../responseFormat');
-const auth = require('../../auth');
-const storedb = require('../../db/postgres/storedb');
+const { formatPlaylist } = require('./responseFormat');
+const auth = require('../auth');
+const storedb = require('../db/storedb');
 
 const createPlaylist = async (req, res) => {
     const userId = auth.verifyUser(req);

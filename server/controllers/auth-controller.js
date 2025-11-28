@@ -1,5 +1,5 @@
-const auth = require('../../auth');
-const authdb = require('../../db/postgres/authdb');
+const auth = require('../auth');
+const authdb = require('../db/authdb');
 
 const getLoggedIn = async (req, res) => {
     try {

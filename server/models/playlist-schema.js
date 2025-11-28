@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const conn = require('../../db/postgres/index.js');
+const conn = require('../db/index.js');
 
 const Playlist = conn.define('Playlist', {
     id: {

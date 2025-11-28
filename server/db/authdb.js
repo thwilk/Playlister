@@ -1,4 +1,4 @@
-const User  = require('../../models/postgres/user-schema');
+const User  = require('../models/user-schema');
 const bcrypt = require('bcryptjs');
 
 const findUserById = async (id) => {

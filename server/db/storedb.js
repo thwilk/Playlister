@@ -1,4 +1,4 @@
-const { User, Playlist } = require('../../models/postgres/association');
+const { User, Playlist } = require('../models/association');
 
 const createPlaylist = async (userId, body) => {
     const user = await User.findByPk(userId);
