@@ -54,9 +54,9 @@ const logoutUser = async (req, res) => {
 
 const registerUser = async (req, res) => {
     try {
-        const { firstName, lastName, email, password, passwordVerify } = req.body;
+        const { userName, email, password, passwordVerify } = req.body;
 
-        if (!firstName || !lastName || !email || !password || !passwordVerify) {
+        if (!userName || !email || !password || !passwordVerify) {
             return res.status(400).json({ errorMessage: 'Please enter all required fields.' });
         }
         if (password.length < 8) return res.status(400).json({ errorMessage: 'Password must be at least 8 characters.' });
@@ -65,18 +65,29 @@ const registerUser = async (req, res) => {
         const existingUser = await authdb.findUserByEmail(email);
         if (existingUser) return res.status(400).json({ success: false, errorMessage: 'Account already exists.' });
 
-        const newUser = await authdb.createUser({ firstName, lastName, email, password });
+        const newUser = await authdb.createUser({ userName, email, password });
 
         const token = auth.signToken(newUser.id);
         res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' })
            .status(200)
-           .json({ success: true, user: { firstName: newUser.firstName, lastName: newUser.lastName, email: newUser.email } });
+           .json({ success: true, user: { userName: newUser.userName, email: newUser.email } });
 
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: err.message });
     }
 };
+
+const editUser = async (req, res) => {
+    try {
+        const userId = auth.verifyUser(req);
+        const { userName, profilePicture, newPassword } = req.body;
+        await authdb.updateUser( userId, userName, profilePicture, newPassword)
+    }
+    catch (err) {
+        throw err;
+    }
+}
 
 module.exports = {
     getLoggedIn,

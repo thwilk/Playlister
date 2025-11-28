@@ -8,13 +8,9 @@ const User = conn.define(
             primaryKey: true,
             autoIncrement: true,
         },
-        firstName: {
+        userName: {
             type: DataTypes.STRING,
             allowNull: false,
-          },
-        lastName: {
-            type: DataTypes.STRING,
-            allowNull: false, 
           },
         email: {
             type: DataTypes.STRING,
