@@ -32,10 +32,23 @@ const updateSong = async (songId, title, artist, year, youtubeId) => {
     return song;
 }
 
+const getSongPairs = async () => {
+    const songs = await Song.findAll();
+    if (!songs) throw new Error('No songs in catalogue');
+
+    return songs.Playlists.map(song => ({ 
+        _id: song.id, 
+        title: song.title,
+        artist: song.artist,
+        year: song.year,
+        youtubeId: song.youtubeId 
+    }));
+};
 
 module.exports = {
     findSongById,
     findSongsById,
     createSong,
-    updateSong
+    updateSong,
+    getSongPairs
 }

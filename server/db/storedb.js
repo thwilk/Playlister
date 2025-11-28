@@ -60,6 +60,17 @@ const updatePlaylist = async (playlistId, userId, body) => {
     return playlist;
 };
 
+const addSongToPlaylist = async (playlistId, songId) => {
+    const playlist = await Playlist.findById(playlistId);
+
+    playlist.songs.push(songId);
+    await playlist.save();
+
+    return playlist;
+
+
+}
+
 module.exports = {
     createPlaylist,
     deletePlaylist,

@@ -105,6 +105,11 @@ const updatePlaylist = async (req, res) => {
     }
 };
 
+const addSongToPlaylist = async (req, res) => {
+    const { songId, playlistId } = req.body;
+
+}
+
 module.exports = {
     createPlaylist,
     deletePlaylist,
