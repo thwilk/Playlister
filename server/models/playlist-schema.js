@@ -11,9 +11,9 @@ const Playlist = conn.define('Playlist', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    songs: { 
-        type: DataTypes.JSONB, 
-        defaultValue: [] 
+    songKeys: {               
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        allowNull: true,
     },
     userId: {               
         type: DataTypes.INTEGER,
