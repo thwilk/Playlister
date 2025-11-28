@@ -12,11 +12,11 @@ const User = conn.define(
             type: DataTypes.STRING,
             allowNull: false,
           },
-          lastName: {
+        lastName: {
             type: DataTypes.STRING,
             allowNull: false, 
           },
-          email: {
+        email: {
             type: DataTypes.STRING,
             unique: true,
             allowNull: false,
@@ -24,6 +24,11 @@ const User = conn.define(
               isEmail: true, 
             },
           },
+        profileAvatar: {
+            type: DataTypes.STRING,
+            unique: false,
+            allowNull: false,
+        },
         passwordHash: {
             type: DataTypes.STRING,
             unique: false,
