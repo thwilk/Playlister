@@ -24,7 +24,15 @@ const Song = conn.define(
             type: DataTypes.STRING,
             unique: false,
             allowNull: false,
-        }   
+        },
+        listens: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        listenedByGuest: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+        }
     }
 );
 

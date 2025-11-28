@@ -23,6 +23,16 @@ const Playlist = conn.define('Playlist', {
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
+    },
+    listeners: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        allowNull: true,
+    },
+
+    
+    listenedByGuest: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
     }
 });
 
