@@ -3,6 +3,7 @@ const { formatPlaylist } = require('./responseFormat');
 const auth = require('../auth');
 const storedb = require('../db/storedb');
 
+
 const createPlaylist = async (req, res) => {
     const userId = auth.verifyUser(req);
     if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
@@ -106,7 +107,18 @@ const updatePlaylist = async (req, res) => {
 };
 
 const addSongToPlaylist = async (req, res) => {
+    const userId = auth.verifyUser(req);
+    if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
     const { songId, playlistId } = req.body;
+
+    const playlist = await addSongToPlaylist(songId, playlistId);
+    return res.status(200).json({
+        success: true,
+        id: playlist.id,
+        playlist: formatPlaylist(playlist),
+        message: 'Playlist updated'
+    });
+
 
 }
 

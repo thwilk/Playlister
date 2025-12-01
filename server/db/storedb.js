@@ -77,5 +77,6 @@ module.exports = {
     getPlaylistById,
     getPlaylistPairs,
     getPlaylists,
-    updatePlaylist
+    updatePlaylist,
+    addSongToPlaylist,
 };
