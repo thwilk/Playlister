@@ -1,4 +1,4 @@
-const Song  = require('../models/song-schema');
+const Song = require('../models/song-schema');
 
 
 const findSongById = async (id) => {
@@ -6,7 +6,7 @@ const findSongById = async (id) => {
 };
 
 const findSongsById = async (ids) => { // ids should be an array of songs 
-    const songs = ids.map(id => findSongById(id))
+    const songs = ids.map(id => findSongByPk(id))
     return songs;
 };
 
@@ -45,10 +45,20 @@ const getSongPairs = async () => {
     }));
 };
 
+
+//deletes song WITH NO CHECKS
+const deleteSong = async (id) => {
+    const song = await Song.findSongByPk(id);
+    if (!song) throw new Error('Playlist not found');
+    await song.destroy();
+    return true;
+}
+
 module.exports = {
     findSongById,
     findSongsById,
     createSong,
     updateSong,
-    getSongPairs
+    getSongPairs,
+    deleteSong,
 }
