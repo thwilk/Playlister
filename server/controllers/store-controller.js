@@ -56,9 +56,6 @@ const getPlaylistById = async (req, res) => {
 };
 
 const getPlaylistPairs = async (req, res) => {
-    const userId = auth.verifyUser(req);
-    if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
-
     try {
         const pairs = await storedb.getPlaylistPairs(userId);
         return res.status(200).json({ success: true, idNamePairs: pairs });
