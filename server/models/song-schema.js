@@ -29,10 +29,6 @@ const Song = conn.define(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        listenedByGuest: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-        },
         createdBy: {               
             type: DataTypes.INTEGER,
             references: {

@@ -2,19 +2,25 @@ const Song = require('../models/song-schema');
 
 
 const findSongById = async (id) => {
-    return await Song.findByPk(id);
+    const song = await Song.findByPk(id);
+    return { 
+        _id: song.id, 
+        title: song.title,
+        artist: song.artist,
+        year: song.year,
+        youtubeId: song.youtubeId,
+        listens: song.lisens,
+        createdBy: song.createdBy
+    };
 };
 
 const findSongsById = async (ids) => { // ids should be an array of songs 
-    const songs = ids.map(id => findSongByPk(id))
-    return songs;
+    return ids.map(id => findSongById(id)); // calls above 
 };
 
-const createSong = async (title, artist, year, youtubeId) => {
+const createSong = async (title, artist, year, youtubeId, createdBy) => {
     const listens = 0;
-    const listenedByGuest = false;
-    const newSong = await Song.create({ title, artist, year, youtubeId, listens, listenedByGuest });
-    
+    const newSong = await Song.create({ title, artist, year, youtubeId, listens, createdBy});
     return newSong;
 }
 
@@ -32,19 +38,34 @@ const updateSong = async (songId, title, artist, year, youtubeId) => {
     return song;
 }
 
-const getSongPairs = async () => {
+const getAllSongs = async () => {
     const songs = await Song.findAll();
     if (!songs) throw new Error('No songs in catalogue');
 
-    return songs.Playlists.map(song => ({ 
+    return songs.map(song => ({ 
         _id: song.id, 
         title: song.title,
         artist: song.artist,
         year: song.year,
-        youtubeId: song.youtubeId 
+        youtubeId: song.youtubeId,
+        listens: song.lisens,
+        createdBy: song.createdBy
     }));
 };
 
+const addListen = async (id) => {
+    try {
+        const song = await Song.findByPk(id);
+        song.listens = song.listens + 1;
+
+        await song.save();
+
+        return true;
+    }
+    catch (err) {
+        throw new Error("Couldnt Update Listens")
+    }
+}
 
 //deletes song WITH NO CHECKS
 const deleteSong = async (id) => {
@@ -59,6 +80,7 @@ module.exports = {
     findSongsById,
     createSong,
     updateSong,
-    getSongPairs,
+    getAllSongs,
     deleteSong,
+    addListen
 }
