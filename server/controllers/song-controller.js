@@ -8,9 +8,11 @@ const songdb = require('../db/songdb');
 const updateSong = async (req, res) => {
     const userId = auth.verifyUser(req);
     if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
+    
+    const songId = req.params.id;
     const data = req.body;
     try{ 
-        const updatedsong = await songdb.updateSong(userId, data);
+        const updatedsong = await songdb.updateSong(songId, userId, data);
         if(updatedsong)
             return res.status(201).json({success: true, song: updateSong});
 

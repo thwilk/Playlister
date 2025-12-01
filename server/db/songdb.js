@@ -24,7 +24,7 @@ const createSong = async (title, artist, year, youtubeId, createdBy) => {
     return newSong;
 }
 
-const updateSong = async (userId, data) => {
+const updateSong = async (songId, userId, data) => {
 
     const song = await Song.findSongByPk(songId);
     if (!song) throw new Error('Song not found');
