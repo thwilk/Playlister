@@ -32,7 +32,16 @@ const Song = conn.define(
         listenedByGuest: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
-        }
+        },
+        createdBy: {               
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'Users', 
+                key: 'id'
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL'
+        },
     }
 );
 
