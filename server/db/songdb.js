@@ -67,11 +67,10 @@ const addListen = async (id) => {
     }
 }
 
-//deletes song WITH NO CHECKS
+//deletes song
 const deleteSong = async (songId, userId) => {
     const song = await Song.findSongByPk(songId);
     if (!song) throw new Error('Song not found');
-    
     if(song.createdBy != userId) throw new Error('Forbidden');
 
     await song.destroy();

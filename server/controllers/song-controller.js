@@ -45,16 +45,25 @@ const getSong = async (req, res) => {
     
 }
 
-// -- TODO -- 
 // params = id
 // deletes song (200 if ok)
 const deleteSong = async (req, res) => {
     const userId = auth.verifyUser(req);
     if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
+    
+    const { songId } = req.params.id;
+    if(!songId) return res.status(401).json({ success: false, errorMessage: 'Please Fill All Fields'});
+    
+
+    //Core
     try{ 
+        const deleted = await storedb.deleteSong(songId, userId);
+        if(deleted)
+            return res.status(200).json({success: true})
+        return res.status(401).json({ success: false, errorMessage: "Couldnt Fufill" });
     }
     catch (error) {
-
+        return res.status(401).json({ success: false, errorMessage: error.message });
     }
     
 }
@@ -74,7 +83,7 @@ const createSong = async (req, res) => {
         return res.status(200).json({success: true, song: newsong});
     }
     catch (error) {
-        return res.status(401).json({ success: false, errorMessage: 'Database Issue' });
+        return res.status(401).json({ success: false, errorMessage: error.message });
     }
     
 
