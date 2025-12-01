@@ -24,14 +24,16 @@ const createSong = async (title, artist, year, youtubeId, createdBy) => {
     return newSong;
 }
 
-const updateSong = async (songId, title, artist, year, youtubeId) => {
+const updateSong = async (userId, data) => {
 
-    const song = Song.findByPk(songId);
+    const song = await Song.findSongByPk(songId);
+    if (!song) throw new Error('Song not found');
+    if(song.createdBy != userId) throw new Error('Forbidden');
 
-    song.title = title || song.title;
-    song.artist = artist || song.artist;
-    song.year = year || song.year;
-    song.youtubeId = youtubeId || song.youtubeId;
+    song.title = data.title || song.title;
+    song.artist = data.artist || song.artist;
+    song.year = data.year || song.year;
+    song.youtubeId = data.youtubeId || song.youtubeId;
 
     await song.save();
 

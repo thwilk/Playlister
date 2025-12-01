@@ -3,22 +3,24 @@ const songdb = require('../db/songdb');
 
 
 
-// -- TODO -- 
 // params = id, body = song update
 // return updated song
 const updateSong = async (req, res) => {
     const userId = auth.verifyUser(req);
     if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
-
+    const data = req.body;
     try{ 
+        const updatedsong = await songdb.updateSong(userId, data);
+        if(updatedsong)
+            return res.status(201).json({success: true, song: updateSong});
+
     }
     catch (error) {
-
+        return res.status(404).json({ success: false, errorMessage: err.message });
     }
     
 }
 
-// -- TODO -- 
 // return all songs 
 const getSongs = async (req, res) => {
     try {
@@ -30,17 +32,25 @@ const getSongs = async (req, res) => {
     }
 }
 
-// -- TODO -- 
 // params = id
 // return song with id = id
 const getSong = async (req, res) => {
     const userId = auth.verifyUser(req);
     if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
    
+    const songId = req.params.id;
+    if(!songId) return res.status(401).json({ success: false, errorMessage: 'Please Fill All Parameters'});
+
+
     try{ 
+        const song = await songdb.findSongById(songId);
+        if(song)
+            return res.status(200).json({success: true, song: song});
+        return res.status(401).json({ success: false, errorMessage: "Couldnt Fufill" });
+
     }
     catch (error) {
-
+        return res.status(401).json({ success: false, errorMessage: error.message });
     }
     
 }
@@ -52,7 +62,7 @@ const deleteSong = async (req, res) => {
     if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
     
     const { songId } = req.params.id;
-    if(!songId) return res.status(401).json({ success: false, errorMessage: 'Please Fill All Fields'});
+    if(!songId) return res.status(401).json({ success: false, errorMessage: 'Please Fill All Parameters'});
     
 
     //Core
@@ -85,9 +95,18 @@ const createSong = async (req, res) => {
     catch (error) {
         return res.status(401).json({ success: false, errorMessage: error.message });
     }
-    
+}
 
+const addListen = async (req, res) =>{
+    const { songId } = req.params.id;
 
+    try{
+        await songdb.addListen(songId);
+        return res.status(200).json({ success: true });
+    }
+    catch (error) {
+        return res.status(401).json({ success: false, errorMessage: error.message });
+    }
 }
 
 
@@ -96,5 +115,6 @@ module.exports = {
     deleteSong,
     getSong,
     getSongs,
-    updateSong
+    updateSong,
+    addListen
 } 
