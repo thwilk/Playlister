@@ -17,7 +17,8 @@ const getLoggedIn = async (req, res) => {
             loggedIn: true,
             user: {
                 userName: loggedInUser.userName,
-                email: loggedInUser.email
+                email: loggedInUser.email,
+                profilePicture: loggedInUser.profilePicture
             }
         });
     } catch (err) {
@@ -53,8 +54,7 @@ const logoutUser = async (req, res) => {
 
 const registerUser = async (req, res) => {
     try {
-        const { userName, email, password, passwordVerify } = req.body;
-        const profilePicture = "67";
+        const { userName, email, profileAvatar, password, passwordVerify } = req.body;
 
         if (!userName || !email || !password || !passwordVerify) {
             return res.status(400).json({ errorMessage: 'Please enter all required fields.' });
@@ -66,12 +66,12 @@ const registerUser = async (req, res) => {
         if (existingUser) return res.status(400).json({ success: false, errorMessage: 'Account with that email already exists.' });
 
 
-        const newUser = await authdb.createUser({ userName, profilePicture, email, password });
+        const newUser = await authdb.createUser({ userName, profileAvatar, email, password });
 
         const token = auth.signToken(newUser.id);
         res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' })
            .status(200)
-           .json({ success: true, user: { userName: newUser.userName, email: newUser.email } });
+           .json({ success: true, user: { userName: newUser.userName, email: newUser.email, profileAvatar: newUser.profileAvatar} });
 
     } catch (err) {
         console.error(err);

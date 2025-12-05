@@ -24,6 +24,7 @@ export default function RegisterScreen() {
             formData.get('userName'),
             // formData.get('lastName'),
             formData.get('email'),
+            "placeholderProfileAvatar",
             formData.get('password'),
             formData.get('passwordVerify')
         );

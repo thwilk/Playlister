@@ -9,11 +9,10 @@ const findUserByEmail = async (email) => {
     return await User.findOne({ where: { email } });
 };
 
-const createUser = async ({ userName, profilePicture, email, password }) => {
+const createUser = async ({ userName, profileAvatar, email, password }) => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    const profileAvatar = profilePicture;
     const newUser = await User.create({ userName, email, profileAvatar, passwordHash });
     return newUser;
 };

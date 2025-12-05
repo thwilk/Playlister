@@ -104,7 +104,7 @@ export const logoutUser = async () => {
     }
   };
   
-export const registerUser = (userName, email, password, passwordVerify) => {
+export const registerUser = (userName, email, profileAvatar, password, passwordVerify) => {
 
     return fetch(url + '/register/', 
         {
@@ -117,6 +117,7 @@ export const registerUser = (userName, email, password, passwordVerify) => {
                 userName: userName,
                 email: email,
                 password: password,
+                profileAvatar: profileAvatar,
                 passwordVerify: passwordVerify
             })
         })
