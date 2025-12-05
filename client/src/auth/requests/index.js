@@ -104,7 +104,7 @@ export const logoutUser = async () => {
     }
   };
   
-export const registerUser = (firstName, lastName, email, password, passwordVerify) => {
+export const registerUser = (userName, email, password, passwordVerify) => {
 
     return fetch(url + '/register/', 
         {
@@ -114,8 +114,7 @@ export const registerUser = (firstName, lastName, email, password, passwordVerif
             method: "POST",
             credentials: "include",
             body: JSON.stringify({
-                firstName: firstName,
-                lastName: lastName,
+                userName: userName,
                 email: email,
                 password: password,
                 passwordVerify: passwordVerify

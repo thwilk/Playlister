@@ -15,7 +15,6 @@ const updateSong = async (req, res) => {
         const updatedsong = await songdb.updateSong(songId, userId, data);
         if(updatedsong)
             return res.status(201).json({success: true, song: updateSong});
-
     }
     catch (error) {
         return res.status(404).json({ success: false, errorMessage: err.message });

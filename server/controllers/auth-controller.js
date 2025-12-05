@@ -16,8 +16,7 @@ const getLoggedIn = async (req, res) => {
         return res.status(200).json({
             loggedIn: true,
             user: {
-                firstName: loggedInUser.firstName,
-                lastName: loggedInUser.lastName,
+                userName: loggedInUser.userName,
                 email: loggedInUser.email
             }
         });
@@ -55,6 +54,7 @@ const logoutUser = async (req, res) => {
 const registerUser = async (req, res) => {
     try {
         const { userName, email, password, passwordVerify } = req.body;
+        const profilePicture = "67";
 
         if (!userName || !email || !password || !passwordVerify) {
             return res.status(400).json({ errorMessage: 'Please enter all required fields.' });
@@ -63,9 +63,10 @@ const registerUser = async (req, res) => {
         if (password !== passwordVerify) return res.status(400).json({ errorMessage: 'Passwords do not match.' });
 
         const existingUser = await authdb.findUserByEmail(email);
-        if (existingUser) return res.status(400).json({ success: false, errorMessage: 'Account already exists.' });
+        if (existingUser) return res.status(400).json({ success: false, errorMessage: 'Account with that email already exists.' });
 
-        const newUser = await authdb.createUser({ userName, email, password });
+
+        const newUser = await authdb.createUser({ userName, profilePicture, email, password });
 
         const token = auth.signToken(newUser.id);
         res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' })

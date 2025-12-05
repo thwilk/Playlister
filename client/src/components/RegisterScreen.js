@@ -21,8 +21,8 @@ export default function RegisterScreen() {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         auth.registerUser(
-            formData.get('firstName'),
-            formData.get('lastName'),
+            formData.get('userName'),
+            // formData.get('lastName'),
             formData.get('email'),
             formData.get('password'),
             formData.get('passwordVerify')
@@ -55,18 +55,18 @@ export default function RegisterScreen() {
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} >
                                 <TextField
-                                    autoComplete="fname"
-                                    name="firstName"
+                                    autoComplete="uname"
+                                    name="userName"
                                     required
                                     fullWidth
-                                    id="firstName"
-                                    label="First Name"
+                                    id="userName"
+                                    label="User Name"
                                     autoFocus
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            {/* <Grid item xs={12} sm={6}>
                                 <TextField
                                     required
                                     fullWidth
@@ -75,7 +75,7 @@ export default function RegisterScreen() {
                                     name="lastName"
                                     autoComplete="lname"
                                 />
-                            </Grid>
+                            </Grid> */}
                             <Grid item xs={12}>
                                 <TextField
                                     required

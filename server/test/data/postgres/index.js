@@ -1,6 +1,6 @@
 const dotenv = require('dotenv').config({ path: __dirname + '/../../../.env' });
-const sequelize = require('../../../db/postgres/index');
-const { User, Playlist } = require('../../../models/postgres/association');
+const sequelize = require('../../../db/index');
+const { User, Playlist } = require('../../../models/association');
 const testData = require('../example-db-data-psql.json');
 
 async function clearTable(model, tableName) {
