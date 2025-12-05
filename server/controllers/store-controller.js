@@ -12,11 +12,11 @@ const createPlaylist = async (req, res) => {
     if (!name) return res.status(400).json({ success: false, error: 'You must provide a Playlist name' });
 
     try {
-        const playlist = await storedb.createPlaylist(userId, { name, songs });
+        const playlist = await storedb.createPlaylist(userId, {name, songs} );
         return res.status(201).json({ playlist: formatPlaylist(playlist) });
     } catch (err) {
         console.error(err);
-        const message = err.message === 'Forbidden' ? 'Forbidden' : 'Playlist not created';
+        const message = err.message === 'Forbidden' ? 'Forbidden' : 'Playlist not WHYY';
         return res.status(400).json({ success: false, errorMessage: message });
     }
 };
@@ -56,6 +56,9 @@ const getPlaylistById = async (req, res) => {
 };
 
 const getPlaylistPairs = async (req, res) => {
+    const userId = auth.verifyUser(req);
+    if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
+
     try {
         const pairs = await storedb.getPlaylistPairs(userId);
         return res.status(200).json({ success: true, idNamePairs: pairs });

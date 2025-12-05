@@ -4,13 +4,19 @@ const createPlaylist = async (userId, body) => {
     const user = await User.findByPk(userId);
     if (!user) throw new Error('User not found');
 
-    const songs = body.songs
-    const name = body.name
+    const { name, songs} = body;
+
+    console.log(user.id)
+    console.log(name)
+    console.log(songs)
 
     const playlist = await Playlist.create({
         name,
-        songs: songs || [],
-        userId: user.id
+        songKeys: songs,
+        userId: user.id,
+        listenedByGuest: false,
+        listeners: [],
+
     });
 
     return playlist;
