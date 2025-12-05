@@ -18,7 +18,7 @@ const getLoggedIn = async (req, res) => {
             user: {
                 userName: loggedInUser.userName,
                 email: loggedInUser.email,
-                profilePicture: loggedInUser.profilePicture
+                profileAvatar: loggedInUser.profileAvatar
             }
         });
     } catch (err) {

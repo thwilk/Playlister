@@ -143,11 +143,10 @@ function AuthContextProvider(props) {
         }
     }
 
-    auth.getUserInitials = function() {
+    auth.getUserAvatar = function() {
         let initials = "";
         if (auth.user) {
-            initials += auth.user.firstName.charAt(0);
-            initials += auth.user.lastName.charAt(0);
+            initials += auth.user.profileAvatar;
         }
         console.log("user initials: " + initials);
         return initials;
