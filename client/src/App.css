@@ -105,6 +105,11 @@ body {
   overflow: scroll;
 }
 
+#playlist-selector {
+  flex: 1;
+}
+
+
 #playlister-workspace {
   position: absolute;
   left: 0%;
@@ -148,8 +153,8 @@ body {
   float: left;
 }
 
+
 #list-selector-list {
-  position: absolute;
   left: 0%;
   top: 10%;
   width: 100%;

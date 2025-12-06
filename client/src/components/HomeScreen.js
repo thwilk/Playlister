@@ -7,6 +7,8 @@ import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab'
 import List from '@mui/material/List';
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import RegisterScreen from './RegisterScreen.js';
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -22,6 +24,10 @@ const HomeScreen = () => {
     function handleCreateNewList() {
         store.createNewList();
     }
+
+
+
+
     let listCard = "";
     if (store) {
         listCard = 
@@ -46,26 +52,31 @@ const HomeScreen = () => {
             </Fab>
             </List>;
     }
+
+
     return (
         <div id="playlist-selector">
-            <div id="list-selector-heading">
-            <Fab sx={{transform:"translate(-20%, 0%)"}}
-                color="primary" 
-                aria-label="add"
-                id="add-list-button"
-                onClick={handleCreateNewList}
-            >
-                <AddIcon />
+            
+        <div id="list-selector-heading">
+            <Fab sx={{ transform: "translate(0%, 0%)" }} color="primary" aria-label="add" id="add-list-button" onClick={handleCreateNewList} >
+                <AddIcon /> 
             </Fab>
-                Your Playlists
-            </div>
-            <Box sx={{bgcolor:"background.paper"}} id="list-selector-list">
-                {
-                    listCard
-                }
+            Your Playlists
+        </div>
+
+        <Box sx={{ display: "flex", height: "100%", minHeight: "500px", }} id="HomeWrapper">
+            <Box
+                sx={{ flex: 1, bgcolor: "background.paper", p: 2}} id="Queries">
+            </Box>
+
+            <Divider orientation="vertical" flexItem />
+
+            <Box sx={{ flex: 1, bgcolor: "background.paper", p: 2, }} id="list-selector-list" >
+                {listCard}
                 <MUIDeleteModal />
             </Box>
-        </div>)
+        </Box>
+    </div>)
 }
 
 export default HomeScreen;
