@@ -94,5 +94,6 @@ module.exports = {
     getLoggedIn,
     loginUser,
     logoutUser,
-    registerUser
+    registerUser,
+    editUser
 };

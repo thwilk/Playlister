@@ -139,11 +139,46 @@ export const registerUser = (userName, email, profileAvatar, password, passwordV
 
 
 
+//Still working on this 
+export const editUser = (userName, profileAvatar, password ) => {
+
+    return fetch(url + '/editUser/', 
+        {
+            headers: {
+                "Content-Type": "application/json"
+              },
+            method: "PATCH",
+            credentials: "include",
+            body: JSON.stringify({
+                userName: userName,
+                profileAvatar: profileAvatar,
+                password: password,
+            })
+        })
+        .then((response) => {
+
+            if(!response.ok){ 
+                throw new Error("HTTP error");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data);
+            return data;
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+}
+
+
+
 const apis = {
     getLoggedIn,
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    editUser,
 }
 
 export default apis

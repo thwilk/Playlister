@@ -33,6 +33,13 @@ export default function AppBanner() {
         auth.logoutUser();
     }
 
+    const handleEdit = () => {
+
+        // somehow switches view to the thing
+        handleMenuClose();
+        store.closeCurrentList();
+    }
+
     const handleHouseClick = () => {
         store.closeCurrentList();
     }
@@ -75,6 +82,8 @@ export default function AppBanner() {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem onClick={handleMenuClose}><Link to='/editUser/'>Edit Account</Link></MenuItem>
+
         </Menu>        
 
     let editToolbar = "";

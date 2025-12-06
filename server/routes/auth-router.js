@@ -6,5 +6,6 @@ router.post('/register', auth.registerUser)
 router.post('/login', auth.loginUser)
 router.get('/logout', auth.logoutUser)
 router.get('/loggedIn', auth.getLoggedIn)
+router.patch('/editUser', auth.editUser)
 
 module.exports = router

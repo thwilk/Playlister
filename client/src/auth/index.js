@@ -10,7 +10,8 @@ export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     LOGIN_USER: "LOGIN_USER",
     LOGOUT_USER: "LOGOUT_USER",
-    REGISTER_USER: "REGISTER_USER"
+    REGISTER_USER: "REGISTER_USER",
+    EDIT_USER: "EDIT_USER"
 }
 
 function AuthContextProvider(props) {
@@ -55,6 +56,13 @@ function AuthContextProvider(props) {
                     loggedIn: payload.loggedIn,
                     errorMessage: payload.errorMessage
                 })
+            }
+            case AuthActionType.EDIT_USER: {
+                return setAuth({
+                    user: payload.user,
+                    loggedIn: payload.loggedIn,
+                    errorMessage: payload.errorMessage
+                });
             }
             default:
                 return auth;
@@ -150,6 +158,34 @@ function AuthContextProvider(props) {
         }
         console.log("user initials: " + initials);
         return initials;
+    }
+
+    auth.editUser = async function(userName, profilePicture, newPassword) {
+       try {
+        const response = await authRequestSender.editUser(userName, profilePicture, newPassword);
+        if (response == 200) {
+            authReducer( {
+                type: AuthActionType.LOGOUT_USER,
+                payload: {
+                    user: response.user,
+                    loggedIn: true,
+                    errorMessage: null
+                }
+            });
+
+            history.push("/");
+        }
+
+    } catch(error){
+        authReducer({
+            type: AuthActionType.EDIT_USER,
+            payload: {
+                user: auth.user,
+                loggedIn: false,
+                errorMessage: error.errorMessage
+            }
+        })
+    }
     }
 
     return (
