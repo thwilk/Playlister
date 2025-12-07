@@ -150,11 +150,32 @@ export const getSongs = () => {
       return res.json();
     })
     .catch(err => {
-      console.error("Error creating playlist:", err);
+      console.error("Error getting songs:", err);
     });
 
 }
 
+export const createSong = (title, artist, year, youtubeId) => {
+  return fetch(`${url2}/song`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      title: title,
+      artist: artist,
+      year: year,
+      youtubeId: youtubeId
+    })
+  }) .then(res => {
+    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    return res.json();
+  })
+  .catch(err => {
+    console.error("Error making song:", err);
+  });
+}
 
 const apis = {
     createPlaylist,
@@ -162,7 +183,10 @@ const apis = {
     getPlaylistById,
     getPlaylistPairs,
     updatePlaylistById,
-    getSongs
+
+
+    getSongs,
+    createSong,
 }
 
 export default apis

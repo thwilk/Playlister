@@ -227,7 +227,7 @@ function GlobalStoreContextProvider(props) {
                     listNameActive: false,
                     listIdMarkedForDeletion: null,
                     listMarkedForDeletion: null,
-                    songs: payload.songs
+                    songs: payload
                 });
             }
             case GlobalStoreActionType.HIDE_MODALS: {
@@ -572,6 +572,17 @@ function GlobalStoreContextProvider(props) {
         }
         asyncUpdateCurrentList();
     }
+
+    store.addSongToCatalog = function (title, artist, year, youtubeId) {
+        async function asyncAddSongToCatalog(title, artist, year, youtubeId) {
+            const response = await storeRequestSender.createSong(title, artist, year, youtubeId);
+            if (response.success) {
+                store.loadSongs();
+            }
+        }
+        asyncAddSongToCatalog(title, artist, year, youtubeId)
+    }
+    
     store.undo = function () {
         tps.undoTransaction();
     }

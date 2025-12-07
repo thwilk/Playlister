@@ -16,23 +16,23 @@ function SongCatalog() {
 
     useEffect(() => {
         store.loadSongs()
+        console.log("PLEASE LOAD THE SONGS:" + store.songs);
     }, [])
-
-    const songs = store.songs || []
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        store.createSong({ title, artist, year })
+
+        store.addSongToCatalog(title, artist, parseInt(year), "noId's")
         setTitle("")
         setArtist("")
         setYear("")
     }
 
     return (
-        <div>
+        <div style={{ padding: "20px" }}>
             <div>
                 <h2>Add New Song</h2>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} style={{ display: "flex", gap: "10px" }}>
                     <input
                         type="text"
                         placeholder="Title"
@@ -58,21 +58,23 @@ function SongCatalog() {
                 </form>
             </div>
 
-
-            <div>
+            <div style={{ marginTop: "30px" }}>
                 <h2>Song Catalog</h2>
-                {songs.length === 0 && <p>No songs found.</p>}
-                <div>
-                    {songs.map((song, index) => (
-                        <SongCard 
-                        key={song._id || song.id} 
-                        song={song} 
-                        index={index} 
-                        />
-                    ))}
-                </div>
-            </div>
 
+                {!store.songs || store.songs.length === 0 ? (
+                    <p>No songs found.</p>
+                ) : (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                        {store.songs.map((song, index) => (
+                            <SongCard
+                                key={song._id || song.id}
+                                song={song}
+                                index={index}
+                            />
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     )
 }

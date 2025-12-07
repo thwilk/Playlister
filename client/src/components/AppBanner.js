@@ -37,6 +37,11 @@ export default function AppBanner() {
         store.closeCurrentList();
     }
 
+    const handleCatalogClick = () => {
+        handleMenuClose();
+        store.closeCurrentList();
+    }
+
     const menuId = 'primary-search-account-menu';
     const loggedOutMenu = (
         <Menu
@@ -98,18 +103,31 @@ export default function AppBanner() {
     }
 
     return (
-        <Box sx={{flexGrow: 1}}>
+        <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
                 <Toolbar>
-                    <Typography                        
-                        variant="h4"
-                        noWrap
-                        component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}                        
-                    >
-                        <Link onClick={handleHouseClick} style={{ textDecoration: 'none', color: 'white' }} to='/'>⌂</Link>
-                    </Typography>
-                    <Box sx={{ flexGrow: 1 }}>{editToolbar}</Box>
+
+                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                        <Link 
+                            onClick={handleHouseClick} 
+                            style={{ textDecoration: 'none', color: 'white', fontSize: "1.4rem" }} 
+                            to='/'
+                        >
+                            ⌂
+                        </Link>
+    
+                        <Link 
+                            onClick={handleCatalogClick} 
+                            style={{ textDecoration: 'none', color: 'white', fontSize: "1.2rem" }} 
+                            to='/songCatalog'
+                        >
+                            Song Catalog
+                        </Link>
+                    </Box>
+
+                    <Box sx={{ flexGrow: 1, pointerEvents: "none" }}>
+                        {editToolbar}
+                    </Box>
                     <Box sx={{ height: "90px", display: { xs: 'none', md: 'flex' } }}>
                         <IconButton
                             size="large"
@@ -120,14 +138,14 @@ export default function AppBanner() {
                             onClick={handleProfileMenuOpen}
                             color="inherit"
                         >
-                            { getAccountMenu(auth.loggedIn) }
+                            {getAccountMenu(auth.loggedIn)}
                         </IconButton>
                     </Box>
+    
                 </Toolbar>
             </AppBar>
-            {
-                menu
-            }
+            {menu}
         </Box>
     );
+    
 }

@@ -87,8 +87,8 @@ const createSong = async (req, res) => {
 
     const { title, artist, year, youtubeId } = req.body;
     
-    if(!title || !artist || !year || !youtubeId) return res.status(401).json({ success: false, errorMessage: 'Please Fill All Fields'});
-
+    if(!title || !artist || !year) return res.status(401).json({ success: false, errorMessage: 'Please Fill All Fields'});
+    // youtube id needed too ^ 
     try{ 
         const newsong = await songdb.createSong(title, artist, year, youtubeId, userId);
         return res.status(200).json({success: true, song: newsong});

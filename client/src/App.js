@@ -12,6 +12,7 @@ import {
     WorkspaceScreen
 } from './components'
 import EditAccount from './components/EditAccount';
+import SongCatalog from './components/SongCatalog';
 /*
   This is the entry-point for our application. Notice that we
   inject our store into all the components in our application.
@@ -30,6 +31,7 @@ const App = () => {
                         <Route path="/editUser/" exact component={EditAccount} />
                         <Route path="/register/" exact component={RegisterScreen} />
                         <Route path="/playlist/:id" exact component={WorkspaceScreen} />
+                        <Route path="/songCatalog" exact component={SongCatalog} />
                     </Switch>
                     <Statusbar />
                 </GlobalStoreContextProvider>
