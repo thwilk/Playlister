@@ -8,6 +8,7 @@ import EditToolbar from './EditToolbar'
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -95,10 +96,10 @@ export default function AppBanner() {
     }
     
     function getAccountMenu(loggedIn) {
-        let userInitials = auth.getUserAvatar();
-        console.log("userInitials: " + userInitials);
-        if (loggedIn) 
-            return <div>{userInitials}</div>;
+        let avatarUrl = auth.getUserAvatar();
+        console.log("userInitials: " + avatarUrl);
+        if (loggedIn && avatarUrl) 
+            return <Avatar src={avatarUrl} alt="User Avatar" sx={{ width: 40, height: 40 }} />;
         else
             return <AccountCircle />;
     }

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import AuthContext from '../auth'
 import MUIErrorModal from './MUIErrorModal'
 import Copyright from './Copyright'
@@ -17,17 +17,61 @@ import Typography from '@mui/material/Typography';
 export default function RegisterScreen() {
     const { auth } = useContext(AuthContext);
 
+    const [profileAvatar, setProfileAvatar] = useState("");
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         auth.registerUser(
             formData.get('userName'),
             formData.get('email'),
-            "placeholderProfileAvatar",
+            profileAvatar,
             formData.get('password'),
             formData.get('passwordVerify')
         );
     };
+
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+    
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+    
+        img.onload = async () => {
+            if (img.width !== 250 || img.height !== 250) {
+                alert("Image must be 250x250 pixels!");
+                return;
+            }
+
+            const base64 = await resizeImage(file);
+            setProfileAvatar(base64);
+        };
+    };
+
+    function resizeImage(file, maxWidth = 250, maxHeight = 250) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = maxWidth;
+                    canvas.height = maxHeight;
+                    const ctx = canvas.getContext('2d');
+    
+                    ctx.drawImage(img, 0, 0, maxWidth, maxHeight);
+    
+                    const dataUrl = canvas.toDataURL('image/png'); 
+                    resolve(dataUrl);
+                };
+                img.onerror = (err) => reject(err);
+                img.src = event.target.result;
+            };
+            reader.onerror = (err) => reject(err);
+            reader.readAsDataURL(file);
+        });
+    }
 
     let modalJSX = ""
     console.log(auth);
@@ -76,6 +120,9 @@ export default function RegisterScreen() {
                                     autoComplete="lname"
                                 />
                             </Grid> */}
+
+
+                            
                             <Grid item xs={12}>
                                 <TextField
                                     required
@@ -108,6 +155,32 @@ export default function RegisterScreen() {
                                     autoComplete="new-password"
                                 />
                             </Grid>
+
+                            <Grid item xs={12}>
+                            <Button
+                                variant="contained"
+                                component="label"
+                                fullWidth
+                            >
+                                Upload Avatar (250x250)
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    hidden
+                                    onChange={handleFileChange}
+                                />
+                            </Button>
+                        </Grid>
+
+                        {profileAvatar && (
+                            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+                                <Typography variant="body2">Preview:</Typography>
+                                <Avatar
+                                    src={profileAvatar}
+                                    sx={{ width: 80, height: 80, margin: '0 auto' }}
+                                />
+                            </Grid>
+                        )}
                         </Grid>
                         <Button
                             type="submit"
