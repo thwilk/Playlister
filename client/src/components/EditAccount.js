@@ -23,6 +23,7 @@ export default function EditAccount() {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [passwordVerify, setPasswordVerify] = useState("");
+    const [profileAvatar, setProfileAvatar] = useState("");
 
 
     const handleSubmit = (event) => {
@@ -31,7 +32,7 @@ export default function EditAccount() {
 
             const x = auth.editUser(
                 userName,
-                "placeholderProfileAvatar",
+                profileAvatar,
                 password,
             );
             console.log("THIS IS X: " + x);
@@ -40,6 +41,7 @@ export default function EditAccount() {
                 setPasswordVerify("");
                 setPassword("");
                 setUserName("");
+                setProfileAvatar("");
             }
 
             
@@ -49,6 +51,49 @@ export default function EditAccount() {
         
     };
 
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+    
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+    
+        img.onload = async () => {
+            if (img.width !== 250 || img.height !== 250) {
+                alert("Image must be 250x250 pixels!");
+                return;
+            }
+
+            const base64String = await resizeImage(file);
+            setProfileAvatar(base64String);
+    
+        };
+    };
+
+    function resizeImage(file, maxWidth = 250, maxHeight = 250) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = maxWidth;
+                    canvas.height = maxHeight;
+                    const ctx = canvas.getContext('2d');
+    
+                    ctx.drawImage(img, 0, 0, maxWidth, maxHeight);
+    
+                    const dataUrl = canvas.toDataURL('image/png'); 
+                    resolve(dataUrl);
+                };
+                img.onerror = (err) => reject(err);
+                img.src = event.target.result;
+            };
+            reader.onerror = (err) => reject(err);
+            reader.readAsDataURL(file);
+        });
+    }
+    
 
 
 
@@ -78,7 +123,7 @@ export default function EditAccount() {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main', width: 56, height: 56 }}>
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
@@ -90,7 +135,6 @@ export default function EditAccount() {
                         <Grid item xs={12}>
                             <TextField
                                 fullWidth
-                                name="userName"
                                 label="User Name"
                                 value={userName}
                                 onChange={(e) => setUserName(e.target.value)}
@@ -100,7 +144,6 @@ export default function EditAccount() {
                         <Grid item xs={12}>
                             <TextField
                                 fullWidth
-                                name="password"
                                 label="New Password"
                                 type="password"
                                 value={password}
@@ -111,13 +154,38 @@ export default function EditAccount() {
                         <Grid item xs={12}>
                             <TextField
                                 fullWidth
-                                name="passwordVerify"
-                                label="New Password Verify"
+                                label="Verify New Password"
                                 type="password"
                                 value={passwordVerify}
                                 onChange={(e) => setPasswordVerify(e.target.value)}
                             />
                         </Grid>
+
+                        <Grid item xs={12}>
+                            <Button
+                                variant="contained"
+                                component="label"
+                                fullWidth
+                            >
+                                Upload Avatar (250x250)
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    hidden
+                                    onChange={handleFileChange}
+                                />
+                            </Button>
+                        </Grid>
+
+                        {profileAvatar && (
+                            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+                                <Typography variant="body2">Preview:</Typography>
+                                <Avatar
+                                    src={profileAvatar}
+                                    sx={{ width: 80, height: 80, margin: '0 auto' }}
+                                />
+                            </Grid>
+                        )}
                     </Grid>
 
                     <Button

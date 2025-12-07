@@ -7,6 +7,7 @@ import EditToolbar from './EditToolbar'
 
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import AppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -107,23 +108,28 @@ export default function AppBanner() {
             <AppBar position="static">
                 <Toolbar>
 
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                        <Link 
-                            onClick={handleHouseClick} 
-                            style={{ textDecoration: 'none', color: 'white', fontSize: "1.4rem" }} 
-                            to='/'
-                        >
-                            ⌂
-                        </Link>
-    
-                        <Link 
-                            onClick={handleCatalogClick} 
-                            style={{ textDecoration: 'none', color: 'white', fontSize: "1.2rem" }} 
-                            to='/songCatalog'
-                        >
-                            Song Catalog
-                        </Link>
-                    </Box>
+                <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                    <Button
+                        component={Link}
+                        to="/"
+                        color="inherit"
+                        onClick={handleHouseClick}
+                        sx={{ fontSize: "1.5rem", textTransform: "none" }}
+                    >
+                        ⌂
+                    </Button>
+
+                    <Button
+                        component={Link}
+                        to="/songCatalog"
+                        color="inherit"
+                        onClick={handleCatalogClick}
+                        sx={{ fontSize: "1.5rem", textTransform: "none" }}
+                    >
+                        Catalog
+                    </Button>
+                </Box>
+
 
                     <Box sx={{ flexGrow: 1, pointerEvents: "none" }}>
                         {editToolbar}

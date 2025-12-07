@@ -21,7 +21,7 @@ const User = conn.define(
             },
           },
         profileAvatar: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             unique: false,
             allowNull: false,
         },

@@ -82,11 +82,19 @@ const registerUser = async (req, res) => {
 const editUser = async (req, res) => {
     try {
         const userId = auth.verifyUser(req);
-        const { userName, profilePicture, newPassword } = req.body;
-        await authdb.updateUser( userId, userName, profilePicture, newPassword)
+        const { userName, profileAvatar, newPassword } = req.body;
+        
+        console.log(userName)
+        console.log(newPassword)
+        const user = await authdb.updateUser( userId, userName, profileAvatar, newPassword)
+
+        return res.status(200)
+        .json({ success: true, user: { userName: user.userName, email: user.email, profileAvatar: user.profileAvatar} });
+
     }
     catch (err) {
-        throw err;
+        console.error(err);
+        res.status(500).json({ success: false, error: err.message });
     }
 }
 

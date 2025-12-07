@@ -62,6 +62,9 @@ function SongCard(props) {
                 href={"https://www.youtube.com/watch?v=" + song.youTubeId}>
                 {song.title} ({song.year}) by {song.artist}
             </a>
+            <div style={{ fontSize: "0.9rem", color: "gray" }}>
+                Listens: {song.listens || 0}
+            </div>
             <Button
                 sx={{transform:"translate(-5%, -5%)", width:"5px", height:"30px"}}
                 variant="contained"

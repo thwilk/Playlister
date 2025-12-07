@@ -152,7 +152,7 @@ export const editUser = (userName, profileAvatar, password ) => {
             body: JSON.stringify({
                 userName: userName,
                 profileAvatar: profileAvatar,
-                password: password,
+                newPassword: password,
             })
         })
         .then((response) => {
