@@ -82,6 +82,16 @@ const getPlaylists = async (req, res) => {
     }
 };
 
+const getPlaylistsWithQueries = async (req, res) => {
+    const { name, username, songTitle, songYear  } = req.body;
+
+    if (!(name, username, songTitle, songYear)){
+        const playlists = await storedb.getPlaylists();
+        const data = playlists.map(pl => formatPlaylist(pl));
+        return res.status(200).json({ success: true, data });
+    }
+}
+
 const updatePlaylist = async (req, res) => {
     const userId = auth.verifyUser(req);
     if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
@@ -128,5 +138,6 @@ module.exports = {
     getPlaylistById,
     getPlaylistPairs,
     getPlaylists,
-    updatePlaylist
+    updatePlaylist,
+    getPlaylistsWithQueries
 };

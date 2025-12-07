@@ -11,6 +11,7 @@
 */
 
 const url = "http://localhost:4000/store";
+const url2 = "http://localhost:4000";
 
 
 // THESE ARE ALL THE REQUESTS WE`LL BE MAKING, ALL REQUESTS HAVE A
@@ -136,13 +137,32 @@ export const createPlaylist = (newListName, newSongs, userEmail) => { //
     });
 };
 
+export const getSongs = () => {
+    return fetch(`${url2}/song/`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+      return res.json();
+    })
+    .catch(err => {
+      console.error("Error creating playlist:", err);
+    });
+
+}
+
 
 const apis = {
     createPlaylist,
     deletePlaylistById,
     getPlaylistById,
     getPlaylistPairs,
-    updatePlaylistById
+    updatePlaylistById,
+    getSongs
 }
 
 export default apis

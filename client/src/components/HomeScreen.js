@@ -1,6 +1,7 @@
 import { useContext, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
 import PlaylistCard from './PlaylistCard.js'
+import SongCatalog from './SongCatalog.js'
 import MUIDeleteModal from './MUIDeleteModal'
 
 import AddIcon from '@mui/icons-material/Add';
@@ -67,6 +68,7 @@ const HomeScreen = () => {
         <Box sx={{ display: "flex", height: "100%", minHeight: "500px", }} id="HomeWrapper">
             <Box
                 sx={{ flex: 1, bgcolor: "background.paper", p: 2}} id="Queries">
+                    <SongCatalog />
             </Box>
 
             <Divider orientation="vertical" flexItem />

@@ -33,13 +33,6 @@ export default function AppBanner() {
         auth.logoutUser();
     }
 
-    const handleEdit = () => {
-
-        // somehow switches view to the thing
-        handleMenuClose();
-        store.closeCurrentList();
-    }
-
     const handleHouseClick = () => {
         store.closeCurrentList();
     }
