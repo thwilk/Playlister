@@ -32,11 +32,9 @@ const deletePlaylist = async (playlistId, userId) => {
     return true;
 };
 
-const getPlaylistById = async (playlistId, userId) => {
-    const playlist = await Playlist.findByPk(userId);
+const getPlaylistById = async (id) => {
+    const playlist = await Playlist.findByPk(id);
     if (!playlist) throw new Error('Playlist not found');
-
-    if (playlist.userId !== playlistId) throw new Error('Forbidden');
 
     return playlist;
 };

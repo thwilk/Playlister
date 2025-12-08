@@ -46,7 +46,7 @@ const getPlaylistById = async (req, res) => {
     if (!playlistId) return res.status(400).json({ success: false, error: 'Playlist ID required' });
 
     try {
-        const playlist = await storedb.getPlaylistById(userId, playlistId);
+        const playlist = await storedb.getPlaylistById(playlistId);
         return res.status(200).json({ success: true, playlist: formatPlaylist(playlist) });
     } catch (err) {
         console.error(err);
