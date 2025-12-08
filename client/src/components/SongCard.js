@@ -1,10 +1,46 @@
-import { useContext } from 'react'
+import { useContext, useState} from 'react'
 import { GlobalStoreContext } from '../store'
-import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const { song, index } = props;
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const [showPlaylistMenu, setShowPlaylistMenu] = useState(false);
+
+    // const playlists = store.getUsersPlaylists() || [];
+    const playlists = []
+
+
+    //menu
+    const handleMenuOpen = (event) => {
+        event.stopPropagation();
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+
+    const handleAddToPlaylist = (song) => {
+        //todo
+    };
+
+    const handleEditSong = (song, index) => {
+       //todo
+    };
+
+    const handleDeleteSong = (song, index) => {
+        //todo  
+    };
 
     function handleDragStart(event) {
         event.dataTransfer.setData("song", index);
@@ -53,6 +89,7 @@ function SongCard(props) {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             draggable="true"
+            style={{ position: "relative" }}  
             onClick={handleClick}
         >
             {index + 1}.
@@ -65,12 +102,54 @@ function SongCard(props) {
             <div style={{ fontSize: "0.9rem", color: "gray" }}>
                 Listens: {song.listens || 0}
             </div>
-            <Button
-                sx={{transform:"translate(-5%, -5%)", width:"5px", height:"30px"}}
-                variant="contained"
-                id={"remove-song-" + index}
-                className="list-card-button"
-                onClick={handleRemoveSong}>{"\u2715"}</Button>
+            <IconButton
+                size="small"
+                onClick={handleMenuOpen}
+                sx={{ position: "absolute", top: 5, right: 5 }}
+            >
+                <MoreVertIcon fontSize="small" />
+            </IconButton>
+
+            <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
+            {showPlaylistMenu && (
+                    <div
+                        style={{
+                            maxHeight: "200px",
+                            overflowY: "auto",
+                            borderLeft: "1px solid #ddd",
+                            marginLeft: "15px",
+                            paddingLeft: "10px"
+                        }}
+                    >
+                        {playlists.length === 0 ? (
+                            <MenuItem disabled>No playlists found</MenuItem>
+                        ) : (
+                            playlists.map((p) => (
+                                <MenuItem
+                                    key={p.id}
+                                    onClick={() => {
+                                        handleAddToPlaylist(p.id, song);
+                                        handleMenuClose();
+                                    }}
+                                >
+                                    {p.name}
+                                </MenuItem>
+                            ))
+                        )}
+                    </div>
+                )}
+                <MenuItem
+                    onClick={() => setShowPlaylistMenu((prev) => !prev)}
+                >
+                    Add to Playlist
+                </MenuItem>
+                <MenuItem onClick={() => { handleEditSong(song, index); handleMenuClose(); }}>
+                    Edit Song
+                </MenuItem>
+                <MenuItem onClick={() => { handleDeleteSong(song, index); handleMenuClose(); }}>
+                    Delete Song
+                </MenuItem>
+            </Menu>
         </div>
     );
 }

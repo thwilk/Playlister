@@ -14,15 +14,23 @@ function SongCatalog() {
     const [artist, setArtist] = useState("")
     const [year, setYear] = useState("")
 
+    const [isQueryMode, setIsQueryMode] = useState(false)
+
     useEffect(() => {
         store.loadSongs()
-        console.log("PLEASE LOAD THE SONGS:" + store.songs);
     }, [])
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        store.addSongToCatalog(title, artist, parseInt(year), "noId's")
+        if (isQueryMode) {
+            // Query mode
+            store.querySongs(title, artist, year)
+        } else {
+            // Add mode
+            store.addSongToCatalog(title, artist, parseInt(year), "noId's")
+        }
+
         setTitle("")
         setArtist("")
         setYear("")
@@ -30,8 +38,25 @@ function SongCatalog() {
 
     return (
         <div style={{ padding: "20px" }}>
+            <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
+                <button
+                    onClick={() => setIsQueryMode(false)}
+                    style={{ background: !isQueryMode ? "lightgreen" : "white" }}
+                >
+                    Add New Song
+                </button>
+
+                <button
+                    onClick={() => setIsQueryMode(true)}
+                    style={{ background: isQueryMode ? "lightblue" : "white" }}
+                >
+                    Query Songs
+                </button>
+            </div>
+
             <div>
-                <h2>Add New Song</h2>
+                <h2>{isQueryMode ? "Query Songs" : "Add New Song"}</h2>
+
                 <form onSubmit={handleSubmit} style={{ display: "flex", gap: "10px" }}>
                     <input
                         type="text"
@@ -54,7 +79,9 @@ function SongCatalog() {
                         onChange={(e) => setYear(e.target.value)}
                     />
 
-                    <button type="submit">Submit</button>
+                    <button type="submit">
+                        {isQueryMode ? "Search" : "Submit"}
+                    </button>
                 </form>
             </div>
 
