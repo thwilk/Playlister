@@ -119,6 +119,36 @@ export const getPlaylistForUser = () => {
       });
   };
 
+  export const getPlaylistQuery = (name, username, songTitle, songArtist, songYear) => {
+    return fetch(url + `/playlistquery/`, {
+      method: 'POST',
+      credentials: 'include', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name, 
+        username: username, 
+        songTitle: songTitle, 
+        songArtist: songArtist, 
+        songYear: songYear
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json(); 
+      })
+      .then((data) => {
+        // console.log(data);
+        return data; 
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
 
 
 export const updatePlaylistById = (id, playlist) => {
@@ -201,6 +231,8 @@ export const createSong = (title, artist, year, youtubeId) => {
   });
 }
 
+
+
 const apis = {
     createPlaylist,
     deletePlaylistById,
@@ -208,6 +240,8 @@ const apis = {
     getPlaylistForUser,
     updatePlaylistById,
     getPlaylists,
+
+    getPlaylistQuery,
 
 
     getSongs,

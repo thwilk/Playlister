@@ -476,6 +476,34 @@ function GlobalStoreContextProvider(props) {
         asyncSetCurrentList(id);
     }
 
+    store.queryPlaylists = function (queries) {
+        async function asyncQuery(queries) {
+            const { name, username, songTitle, songArtist, songYear} = queries;
+        
+            if (
+                name == null || username == null || songTitle == null || songArtist == null ||songYear == null
+            ) {
+            }
+        
+            let response = await storeRequestSender.getPlaylistQuery(name, username, songTitle, songArtist, songYear);
+
+            storeReducer({
+                type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+                payload: response.idNamePairs
+            });
+
+            console.log("FILTHHHHY" + store.idNamePairs);
+            console.log("FILTHHHHY" + response.idNamePairs);
+            console.log("FILTHHHHY" + response);
+
+
+            // store.sortSongs(store.currentSorting)
+            
+        }
+        asyncQuery(queries);
+    };
+    
+
     store.getPlaylistSize = function() {
         return store.currentList.songs.length;
     }

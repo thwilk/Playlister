@@ -4,6 +4,7 @@ const auth = require('../auth');
 const storedb = require('../db/storedb');
 
 
+
 const createPlaylist = async (req, res) => {
     const userId = auth.verifyUser(req);
     if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
@@ -84,14 +85,37 @@ const getPlaylists = async (req, res) => {
 };
 
 const getPlaylistsWithQueries = async (req, res) => {
-    const { name, username, songTitle, songYear  } = req.body;
+    try {
+        const { name, username, songTitle, songArtist, songYear } = req.body;
 
-    if (!(name, username, songTitle, songYear)){
-        const playlists = await storedb.getPlaylists();
-        const data = await Promise.all(playlists.map(pl => formatPlaylist(pl)));
-        return res.status(200).json({ success: true, data });
+        if (!(name || username || songTitle || songArtist || songYear)){
+            return res.status(400).json({ success: false, error: "please input something" });
+        }
+        
+
+        const playlists = await storedb.getPlaylistQueries({
+            playlistName: name || "",
+            playlistOwner: username || "",
+            songTitle: songTitle || "",
+            songArtist: songArtist || "",
+            songYear: songYear || ""
+        });
+
+        
+        let data = [];
+        if(playlists){
+            data = await Promise.all(
+                playlists.map(pl => formatPlaylist(pl))
+            );
+        }
+
+        return res.status(200).json({ success: true, idNamePairs: data });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, error: err.message });
     }
-}
+};
 
 const updatePlaylist = async (req, res) => {
     const userId = auth.verifyUser(req);

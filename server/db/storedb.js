@@ -1,4 +1,7 @@
 const { User, Playlist } = require('../models/association');
+const songDb = require('./songdb')
+const { Op } = require('sequelize');
+
 
 const createPlaylist = async (userId, body) => {
     const user = await User.findByPk(userId);
@@ -52,6 +55,47 @@ const getPlaylists = async () => {
     return playlists;
 };
 
+const getPlaylistQueries = async (queries) => {
+    const { playlistName, playlistOwnerId, songTitle, songArtist, songYear } = queries;
+
+
+    let playlists = await Playlist.findAll({
+        where: {
+            ...(playlistName && { name: { [Op.iLike]: `%${playlistName}%` } }),
+            ...(playlistOwnerId && { userId: playlistOwnerId })
+        }
+    });
+
+    const hasSongFilters =
+        (songTitle && songTitle !== "") ||
+        (songArtist && songArtist !== "") ||
+        (songYear && songYear !== "");
+
+    if (!hasSongFilters) {
+        return playlists;
+    }
+
+
+    const filtered = [];
+
+    for (const playlist of playlists) {
+        const songs = await songDb.findSongsById(playlist.songKeys);
+
+        const matches = songs.some(song => {
+            const titleMatch = !songTitle || new RegExp(songTitle, "i").test(song.title);
+            const artistMatch = !songArtist || new RegExp(songArtist, "i").test(song.artist);
+            const yearMatch = !songYear || String(song.year) === String(songYear);
+
+            return titleMatch && artistMatch && yearMatch;
+        });
+
+        if (matches) filtered.push(playlist);
+    }
+
+    return filtered;
+};
+
+
 const updatePlaylist = async (playlistId, userId, body) => {
     const playlist = await Playlist.findByPk(userId);
     if (!playlist) throw new Error('Playlist not found');
@@ -84,4 +128,5 @@ module.exports = {
     getPlaylists,
     updatePlaylist,
     addSongToPlaylist,
+    getPlaylistQueries
 };
