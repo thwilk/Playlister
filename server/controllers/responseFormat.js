@@ -1,12 +1,18 @@
+const authdb = require('../db/authdb');
 
-const formatPlaylist = (playlist) => {
+const formatPlaylist = async (playlist) => {
     if (!playlist) return null;
+
+
+    const userData = await authdb.getUserInfo(playlist.userId);
 
     return {
         _id: playlist._id || playlist.id,         
         name: playlist.name,
         songs: playlist.songs || [],
-        userId: playlist.userId || playlist.ownerEmail || null
+        userId: playlist.userId || playlist.ownerEmail || null,
+        userAvatar: userData.profileAvatar,
+        userName: userData.userName
     };
 };
 

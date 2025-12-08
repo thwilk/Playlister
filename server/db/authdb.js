@@ -9,6 +9,11 @@ const findUserByEmail = async (email) => {
     return await User.findOne({ where: { email } });
 };
 
+const getUserInfo = async (id) => {
+    const user = await User.findByPk(id);
+    return {userName: user.userName, profileAvatar: user.profileAvatar};
+}
+
 const createUser = async ({ userName, profileAvatar, email, password }) => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
@@ -51,5 +56,6 @@ module.exports = {
     findUserByEmail,
     createUser,
     verifyPassword,
-    updateUser
+    updateUser,
+    getUserInfo
 };

@@ -6,6 +6,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import TextField from '@mui/material/TextField';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import Avatar from '@mui/material/Avatar';
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -14,6 +17,7 @@ import TextField from '@mui/material/TextField';
     
     @author McKilla Gorilla
 */
+
 function PlaylistCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
@@ -23,29 +27,19 @@ function PlaylistCard(props) {
     function handleLoadList(event, id) {
         console.log("handleLoadList for " + id);
         if (!event.target.disabled) {
-            let _id = event.target.id;
-            if (_id.indexOf('list-card-text-') >= 0)
-                _id = ("" + _id).substring("list-card-text-".length);
-
-            console.log("load " + event.target.id);
-
-            // CHANGE THE CURRENT LIST
             store.setCurrentList(id);
         }
     }
 
+
     function handleToggleEdit(event) {
         event.stopPropagation();
-        toggleEdit();
+        setEditActive((prev) => {
+            if (!prev) store.setIsListNameEditActive();
+            return !prev;
+        });
     }
 
-    function toggleEdit() {
-        let newActive = !editActive;
-        if (newActive) {
-            store.setIsListNameEditActive();
-        }
-        setEditActive(newActive);
-    }
 
     async function handleDeleteList(event, id) {
         event.stopPropagation();
@@ -54,45 +48,34 @@ function PlaylistCard(props) {
         store.markListForDeletion(id);
     }
 
+
+    async function handleCopyList(event, id) {
+        event.stopPropagation();
+        //todo
+        // store.copyPlaylist(id);
+    }
+
+
+    function handlePlayList(event, id) {
+        event.stopPropagation();
+        //todo
+        // store.playPlaylist(id);
+    }
+
     function handleKeyPress(event) {
         if (event.code === "Enter") {
-            let id = event.target.id.substring("list-".length);
-            store.changeListName(id, text);
-            toggleEdit();
+            store.changeListName(idNamePair._id, text);
+            setEditActive(false);
         }
     }
     function handleUpdateText(event) {
         setText(event.target.value);
     }
 
-    let cardElement =
-        <ListItem
-            id={idNamePair._id}
-            key={idNamePair._id}
-            sx={{borderRadius:"25px", p: "10px", bgcolor: '#8000F00F', marginTop: '15px', display: 'flex', /*p: 1*/ }}
-            style={{transform:"translate(1%,0%)", width: '98%', fontSize: '48pt' }}
-            button
-            onClick={(event) => {
-                handleLoadList(event, idNamePair._id)
-            }}
-        >
-            <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
-            <Box sx={{ p: 1 }}>
-                <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                    <EditIcon style={{fontSize:'48pt'}} />
-                </IconButton>
-            </Box>
-            <Box sx={{ p: 1 }}>
-                <IconButton onClick={(event) => {
-                        handleDeleteList(event, idNamePair._id)
-                    }} aria-label='delete'>
-                    <DeleteIcon style={{fontSize:'48pt'}} />
-                </IconButton>
-            </Box>
-        </ListItem>
+    let cardElement;
 
     if (editActive) {
-        cardElement =
+        cardElement = (
             <TextField
                 margin="normal"
                 required
@@ -101,18 +84,77 @@ function PlaylistCard(props) {
                 label="Playlist Name"
                 name="name"
                 autoComplete="Playlist Name"
-                className='list-card'
                 onKeyPress={handleKeyPress}
                 onChange={handleUpdateText}
                 defaultValue={idNamePair.name}
-                inputProps={{style: {fontSize: 48}}}
-                InputLabelProps={{style: {fontSize: 24}}}
+                inputProps={{ style: { fontSize: 36 } }}
+                InputLabelProps={{ style: { fontSize: 18 } }}
                 autoFocus
             />
+        );
+    } else {
+        cardElement = (
+        <ListItem
+            id={idNamePair._id}
+            key={idNamePair._id}
+            sx={{
+                borderRadius: "15px",
+                p: 2,
+                bgcolor: '#f3f3f3',
+                marginTop: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+            }}
+            button
+            onClick={(event) => handleLoadList(event, idNamePair._id)}
+        >
+
+
+
+
+            <Avatar
+                alt={idNamePair.userName || "user"}
+                src={idNamePair.userAvatar || "/default-avatar.png"}
+                sx={{ width: 50, height: 50, mr: 2 }}
+            />
+
+
+
+
+            <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                    {idNamePair.name}
+                </Box>
+                <Box sx={{ fontSize: '0.9rem', color: 'gray' }}>
+                    {idNamePair.userName || "Unknown User"}
+                </Box>
+            </Box>
+
+
+
+
+
+
+            <Box sx={{ display: 'flex', gap: 1 }}>
+                <IconButton onClick={(e) => handlePlayList(e, idNamePair._id)} aria-label="play">
+                    <PlayArrowIcon />
+                </IconButton>
+                <IconButton onClick={(e) => handleCopyList(e, idNamePair._id)} aria-label="copy">
+                    <ContentCopyIcon />
+                </IconButton>
+                <IconButton onClick={handleToggleEdit} aria-label="edit">
+                    <EditIcon />
+                </IconButton>
+                <IconButton onClick={(e) => handleDeleteList(e, idNamePair._id)} aria-label="delete">
+                    <DeleteIcon />
+                </IconButton>
+            </Box>
+        </ListItem>
+        );
     }
-    return (
-        cardElement
-    );
+
+    return cardElement;
 }
 
 export default PlaylistCard;

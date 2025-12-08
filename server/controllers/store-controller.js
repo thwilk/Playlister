@@ -13,7 +13,8 @@ const createPlaylist = async (req, res) => {
 
     try {
         const playlist = await storedb.createPlaylist(userId, {name, songs} );
-        return res.status(201).json({ playlist: formatPlaylist(playlist) });
+        const data = await formatPlaylist(playlist);
+        return res.status(201).json({ playlist: data });
     } catch (err) {
         console.error(err);
         const message = err.message === 'Forbidden' ? 'Forbidden' : 'Playlist not WHYY';
@@ -47,7 +48,8 @@ const getPlaylistById = async (req, res) => {
 
     try {
         const playlist = await storedb.getPlaylistById(playlistId);
-        return res.status(200).json({ success: true, playlist: formatPlaylist(playlist) });
+        const data = await formatPlaylist(playlist);
+        return res.status(200).json({ success: true, playlist: data });
     } catch (err) {
         console.error(err);
         const status = err.message === 'Forbidden' ? 403 : 404;
@@ -73,7 +75,7 @@ const getPlaylists = async (req, res) => {
 
     try {
         const playlists = await storedb.getPlaylists();
-        const data = playlists.map(pl => formatPlaylist(pl));
+        const data = await Promise.all(playlists.map(pl => formatPlaylist(pl)));
         return res.status(200).json({ success: true, idNamePairs: data });
     } catch (err) {
         console.error(err);
@@ -86,7 +88,7 @@ const getPlaylistsWithQueries = async (req, res) => {
 
     if (!(name, username, songTitle, songYear)){
         const playlists = await storedb.getPlaylists();
-        const data = playlists.map(pl => formatPlaylist(pl));
+        const data = await Promise.all(playlists.map(pl => formatPlaylist(pl)));
         return res.status(200).json({ success: true, data });
     }
 }
@@ -102,10 +104,11 @@ const updatePlaylist = async (req, res) => {
 
     try {
         const playlist = await storedb.updatePlaylist(userId, playlistId, playlistData);
+        const data = await formatPlaylist(playlist);
         return res.status(200).json({
             success: true,
             id: playlist.id,
-            playlist: formatPlaylist(playlist),
+            playlist: data,
             message: 'Playlist updated'
         });
     } catch (err) {
@@ -121,10 +124,11 @@ const addSongToPlaylist = async (req, res) => {
     const { songId, playlistId } = req.body;
 
     const playlist = await addSongToPlaylist(songId, playlistId);
+    const data = await formatPlaylist(playlist)
     return res.status(200).json({
         success: true,
         id: playlist.id,
-        playlist: formatPlaylist(playlist),
+        playlist: data,
         message: 'Playlist updated'
     });
 
