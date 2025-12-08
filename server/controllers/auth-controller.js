@@ -41,7 +41,7 @@ const loginUser = async (req, res) => {
         const token = auth.signToken(user.id);
         res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' })
            .status(200)
-           .json({ success: true, user: { firstName: user.firstName, lastName: user.lastName, email: user.email } });
+           .json({ success: true, user: { userName: user.userName, email: user.email, profileAvatar: user.profileAvatar} });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: err.message });

@@ -288,7 +288,7 @@ function GlobalStoreContextProvider(props) {
                     if (response.success) {
 
                         async function getListPairs(playlist) {
-                            response = await storeRequestSender.getPlaylistPairs();
+                            response = await storeRequestSender.getPlaylists();
                             if (response.success) {
                                 let pairsArray = response.idNamePairs;
                                 storeReducer({
@@ -345,7 +345,7 @@ function GlobalStoreContextProvider(props) {
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = function () {
         async function asyncLoadIdNamePairs() {
-            const response = await storeRequestSender.getPlaylistPairs();
+            const response = await storeRequestSender.getPlaylists();
     
             if (response && response.success) { 
                 let pairsArray = response.idNamePairs; 
@@ -359,6 +359,21 @@ function GlobalStoreContextProvider(props) {
             }
         }
         asyncLoadIdNamePairs();
+    }
+
+    store.getUserPlaylist = function () {
+        async function aysncGetUserPlaylist() {
+            const response = await storeRequestSender.getPlaylistForUser();
+    
+            if (response && response.success) { 
+                let pairsArray = response.idNamePairs; 
+                console.log("LENGTH-from function"+ pairsArray.length)
+                return pairsArray;
+            } else {
+                console.log("FAILED TO GET THE LIST PAIRS");
+            }
+        }
+        return aysncGetUserPlaylist();
     }
 
     store.loadSongs = function () {

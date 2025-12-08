@@ -1,4 +1,4 @@
-import { useContext, useState} from 'react'
+import { useContext, useState, useEffect} from 'react'
 import { GlobalStoreContext } from '../store'
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -8,15 +8,17 @@ import MenuItem from '@mui/material/MenuItem';
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
-    const { song, index } = props;
+    const { song, index, usersPlaylists } = props;
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
     const [showPlaylistMenu, setShowPlaylistMenu] = useState(false);
 
-    // const playlists = store.getUsersPlaylists() || [];
-    const playlists = []
+    useEffect(() => {
+        console.log("SOUNDCARD PRINTING FROM USERPLAYLIST" + usersPlaylists + "{}");
+
+    }, [])
 
 
     //menu
@@ -30,8 +32,9 @@ function SongCard(props) {
     };
 
 
-    const handleAddToPlaylist = (song) => {
-        //todo
+    const handleAddToPlaylist = (playlistId, song) => {
+        //rodo 
+        
     };
 
     const handleEditSong = (song, index) => {
@@ -121,21 +124,22 @@ function SongCard(props) {
                             paddingLeft: "10px"
                         }}
                     >
-                        {playlists.length === 0 ? (
+                        {usersPlaylists.length === 0 ? (
                             <MenuItem disabled>No playlists found</MenuItem>
                         ) : (
-                            playlists.map((p) => (
+                            usersPlaylists.map((p) => (
                                 <MenuItem
-                                    key={p.id}
+                                    key={p._id}
                                     onClick={() => {
-                                        handleAddToPlaylist(p.id, song);
+                                        handleAddToPlaylist(p._id, song);
                                         handleMenuClose();
                                     }}
                                 >
                                     {p.name}
                                 </MenuItem>
                             ))
-                        )}
+                        )
+                        }
                     </div>
                 )}
                 <MenuItem

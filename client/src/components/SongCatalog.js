@@ -14,10 +14,23 @@ function SongCatalog() {
     const [artist, setArtist] = useState("")
     const [year, setYear] = useState("")
 
+
     const [isQueryMode, setIsQueryMode] = useState(false)
+
+    const [userPlaylist, setUserPlaylist] = useState([]);
 
     useEffect(() => {
         store.loadSongs()
+        async function fetchPlaylists() {
+            try {
+                const playlists = await store.getUserPlaylist()
+                setUserPlaylist(playlists)
+                console.log("Fetched user playlists:", playlists)
+            } catch (err) {
+                console.error("Error fetching playlists:", err)
+            }
+        }
+        fetchPlaylists()
     }, [])
 
     const handleSubmit = (e) => {
@@ -92,11 +105,13 @@ function SongCatalog() {
                     <p>No songs found.</p>
                 ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                        {store.songs.map((song, index) => (
+                        {
+                            store.songs.map((song, index) => (
                             <SongCard
                                 key={song._id || song.id}
                                 song={song}
                                 index={index}
+                                usersPlaylists={userPlaylist}
                             />
                         ))}
                     </div>

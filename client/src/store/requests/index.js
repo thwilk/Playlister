@@ -73,8 +73,8 @@ export const getPlaylistById = (id) => {
     });
 }
 
-export const getPlaylistPairs = () => {
-    return fetch(url + `/playlistpairs/`, {
+export const getPlaylistForUser = () => {
+    return fetch(url + `/playlistForUser/`, {
       method: 'GET',
       credentials: 'include', 
       headers: {
@@ -95,6 +95,30 @@ export const getPlaylistPairs = () => {
         console.error("Error fetching data:", error);
       });
   };
+
+  export const getPlaylists = () => {
+    return fetch(url + `/playlists/`, {
+      method: 'GET',
+      credentials: 'include', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json(); 
+      })
+      .then((data) => {
+        console.log(data);
+        return data; 
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
 
 
 export const updatePlaylistById = (id, playlist) => {
@@ -181,8 +205,9 @@ const apis = {
     createPlaylist,
     deletePlaylistById,
     getPlaylistById,
-    getPlaylistPairs,
+    getPlaylistForUser,
     updatePlaylistById,
+    getPlaylists,
 
 
     getSongs,

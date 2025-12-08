@@ -55,12 +55,13 @@ const getPlaylistById = async (req, res) => {
     }
 };
 
-const getPlaylistPairs = async (req, res) => {
+const getPlaylistForUser = async (req, res) => {
     const userId = auth.verifyUser(req);
     if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
 
     try {
-        const pairs = await storedb.getPlaylistPairs(userId);
+        const pairs = await storedb.getPlaylistForUser(userId);
+        console.log("\n\n[PAIRS]: " + pairs[0]._id);
         return res.status(200).json({ success: true, idNamePairs: pairs });
     } catch (err) {
         console.error(err);
@@ -69,13 +70,11 @@ const getPlaylistPairs = async (req, res) => {
 };
 
 const getPlaylists = async (req, res) => {
-    const userId = auth.verifyUser(req);
-    if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
 
     try {
         const playlists = await storedb.getPlaylists();
         const data = playlists.map(pl => formatPlaylist(pl));
-        return res.status(200).json({ success: true, data });
+        return res.status(200).json({ success: true, idNamePairs: data });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ success: false, error: err });
@@ -136,7 +135,7 @@ module.exports = {
     createPlaylist,
     deletePlaylist,
     getPlaylistById,
-    getPlaylistPairs,
+    getPlaylistForUser,
     getPlaylists,
     updatePlaylist,
     getPlaylistsWithQueries

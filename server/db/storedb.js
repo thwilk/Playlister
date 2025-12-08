@@ -41,7 +41,7 @@ const getPlaylistById = async (playlistId, userId) => {
     return playlist;
 };
 
-const getPlaylistPairs = async (userId) => {
+const getPlaylistForUser = async (userId) => {
     const user = await User.findByPk(userId, { include: Playlist });
     if (!user) throw new Error('User not found');
 
@@ -50,6 +50,7 @@ const getPlaylistPairs = async (userId) => {
 
 const getPlaylists = async () => {
     const playlists = await Playlist.findAll();
+
     return playlists;
 };
 
@@ -81,7 +82,7 @@ module.exports = {
     createPlaylist,
     deletePlaylist,
     getPlaylistById,
-    getPlaylistPairs,
+    getPlaylistForUser,
     getPlaylists,
     updatePlaylist,
     addSongToPlaylist,
