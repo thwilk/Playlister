@@ -8,7 +8,11 @@ import MenuItem from '@mui/material/MenuItem';
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
-    const { song, index, usersPlaylists } = props;
+    const { song, index, usersPlaylists, showPlaylistMenuProp = false } = props;
+
+    useEffect(() => {
+        setShowPlaylistMenu(showPlaylistMenuProp);
+    }, [showPlaylistMenuProp]);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -84,7 +88,7 @@ function SongCard(props) {
         <div
             key={index}
             id={'song-' + index + '-card'}
-            className={cardClass}
+            className="list-card unselected-list-card"
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}
             onDragEnter={handleDragEnter}
@@ -113,7 +117,7 @@ function SongCard(props) {
             </IconButton>
 
             <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
-            {showPlaylistMenu && (
+                {showPlaylistMenu && (
                     <div
                         style={{
                             maxHeight: "200px",
@@ -137,13 +141,10 @@ function SongCard(props) {
                                     {p.name}
                                 </MenuItem>
                             ))
-                        )
-                        }
+                        )}
                     </div>
                 )}
-                <MenuItem
-                    onClick={() => setShowPlaylistMenu((prev) => !prev)}
-                >
+                <MenuItem onClick={() => setShowPlaylistMenu((prev) => !prev)}>
                     Add to Playlist
                 </MenuItem>
                 <MenuItem onClick={() => { handleEditSong(song, index); handleMenuClose(); }}>

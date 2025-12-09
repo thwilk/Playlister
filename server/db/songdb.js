@@ -42,9 +42,13 @@ const findSongById = async (id) => {
     };
 };
 
-const findSongsById = async (ids) => { // ids should be an array of songs 
-    return ids.map(id => findSongById(id)); // calls above 
-};
+const findSongsById = async (keys) => { // ids should be an array of songs 
+
+        const songs = await Promise.all(
+            keys.map((key) => Song.findByPk(key))
+        );
+        return songs;
+    };
 
 const createSong = async (title, artist, year, youtubeId, createdBy) => {
     const listens = 0;

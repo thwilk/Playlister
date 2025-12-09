@@ -132,7 +132,7 @@ export default function AppBanner() {
                 </Box>
 
 
-                    <Box sx={{ flexGrow: 1, pointerEvents: "none" }}>
+                    <Box sx={{ flexGrow: 1 }}>
                         {editToolbar}
                     </Box>
                     <Box sx={{ height: "90px", display: { xs: 'none', md: 'flex' } }}>

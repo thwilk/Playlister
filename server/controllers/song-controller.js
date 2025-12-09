@@ -33,6 +33,18 @@ const getSongs = async (req, res) => {
     }
 }
 
+const getSongsByIds = async (req, res) => {
+    const { keys } = req.body;
+    try {
+        const songs = await songdb.findSongsById(keys);
+        console.log(songs);
+        return res.status(200).json({ success: true, songs: songs });
+    } catch (err) {
+        console.error(err);
+        return res.status(404).json({ success: false, errorMessage: err.message });
+    }
+}
+
 // params = id
 // return song with id = id
 const getSong = async (req, res) => {
@@ -133,6 +145,7 @@ module.exports = {
     deleteSong,
     getSong,
     getSongs,
+    getSongsByIds,
     updateSong,
     addListen,
     querySongs

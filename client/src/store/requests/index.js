@@ -206,7 +206,26 @@ export const getSongs = () => {
     .catch(err => {
       console.error("Error getting songs:", err);
     });
+}
 
+export const getSongsByIds = (keys) => {
+  return fetch(`${url2}/song/`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      keys: keys
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    return res.json();
+  })
+  .catch(err => {
+    console.error("Error getting songs:", err);
+  });
 }
 
 export const querySongs = (title, artist, year) => {
@@ -285,6 +304,7 @@ const apis = {
     getPlaylistQuery,
 
     adSongToPlaylist,
+    getSongsByIds,
     getSongs,
     createSong,
     querySongs

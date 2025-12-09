@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import SongCard from './SongCard.js'
 import MUIEditSongModal from './MUIEditSongModal'
@@ -15,7 +15,19 @@ import { GlobalStoreContext } from '../store/index.js'
 function WorkspaceScreen() {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
-    
+
+    const [songs, setSongs] = useState([]); // state to hold songs
+
+    useEffect(() => {
+        async function fetchSongs() {
+            if (store.currentList && store.currentList.songKeys.length > 0) {
+                const keys = store.currentList.songKeys;
+                const fetchedSongs = await store.getSongs(keys); // await the promise
+                setSongs(fetchedSongs); // store in state
+            }
+        }
+        fetchSongs();
+    }, [store.currentList]); // re-run when currentList changes
     let modalJSX = "";
     if (store.isEditSongModalOpen()) {
         modalJSX = <MUIEditSongModal />;
@@ -27,12 +39,13 @@ function WorkspaceScreen() {
             sx={{overflow: 'scroll', height: '87%', width: '100%', bgcolor: '#8000F00F'}}
         >
             {
-                store.currentList.songs.map((song, index) => (
+                songs.map((song, index) => (
                     <SongCard
                         id={'playlist-song-' + (index)}
                         key={'playlist-song-' + (index)}
                         index={index}
                         song={song}
+                        showPlaylistMenuProp={false}
                     />
                 ))  
             }

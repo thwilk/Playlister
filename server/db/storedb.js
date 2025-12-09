@@ -14,19 +14,18 @@ const createPlaylist = async (userId, body) => {
     console.log(songs)
 
     const playlist = await Playlist.create({
-        name,
-        songKeys: songs,
-        userId: user.id,
-        listenedByGuest: false,
-        listeners: [],
-
+            name,
+            songKeys: Array.isArray(songs) ? songs : [],
+            userId: user.id,
+            listenedByGuest: false,
+            listeners: [],
     });
 
     return playlist;
 };
 
 const deletePlaylist = async (playlistId, userId) => {
-    const playlist = await Playlist.findByPk(userId);
+    const playlist = await Playlist.findByPk(playlistId);
     if (!playlist) throw new Error('Playlist not found');
 
     if (playlist.userId !== playlistId) throw new Error('Forbidden');
@@ -39,7 +38,14 @@ const getPlaylistById = async (id) => {
     const playlist = await Playlist.findByPk(id);
     if (!playlist) throw new Error('Playlist not found');
 
-    return playlist;
+    return {
+        id: playlist.id,
+        name: playlist.name,
+        songKeys: playlist.songKeys || [],
+        userId: playlist.userId,
+        listeners: playlist.listeners || [],
+        listenedByGuest: playlist.listenedByGuest,
+    };
 };
 
 const getPlaylistForUser = async (userId) => {
@@ -97,25 +103,42 @@ const getPlaylistQueries = async (queries) => {
 
 
 const updatePlaylist = async (playlistId, userId, body) => {
-    const playlist = await Playlist.findByPk(userId);
+    const playlist = await Playlist.findByPk(playlistId);
     if (!playlist) throw new Error('Playlist not found');
 
-    if (playlist.userId !== playlistId) throw new Error('Forbidden');
+    if (playlist.userId !== userId) throw new Error('Forbidden');
 
     playlist.name = body.name;
-    playlist.songs = body.songs || [];
+    playlist.songKeys = Array.isArray(body.songs) ? [...body.songs] : [];
     await playlist.save();
 
-    return playlist;
 };
 
 const addSongToPlaylist = async (playlistId, songId) => {
     const playlist = await Playlist.findByPk(playlistId);
 
-    playlist.songKeys.push(songId);
+    if (!playlist) throw new Error(`Playlist with id ${playlistId} not found`);
+
+    const songKey = Number(songId);
+    if (!Number.isInteger(songKey)) throw new Error(`Invalid songId: ${songId}`);
+
+    if (!Array.isArray(playlist.songKeys)) {
+        playlist.songKeys = [];
+    }
+
+    // console.log("songKeys before:", playlist.songKeys);
+
+    if (!playlist.songKeys.includes(songKey)) {
+        playlist.songKeys = [...playlist.songKeys, songKey]; // instead of push
+    }
+
+    // console.log("songKeys after:", playlist.songKeys);
+
     await playlist.save();
+
+
     return playlist;
-}
+};
 
 module.exports = {
     createPlaylist,

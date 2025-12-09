@@ -13,7 +13,7 @@ const Playlist = conn.define('Playlist', {
     },
     songKeys: {               
         type: DataTypes.ARRAY(DataTypes.INTEGER),
-        allowNull: true,
+        allowNull: false,
     },
     userId: {               
         type: DataTypes.INTEGER,

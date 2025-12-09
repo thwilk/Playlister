@@ -416,6 +416,23 @@ function GlobalStoreContextProvider(props) {
         asyncLoadSongs();
     }
 
+    store.getSongs = function (keys) {
+        async function asyncLoadSongs() {
+            const response = await storeRequestSender.getSongsByIds(keys);
+            
+            if (response && response.success) { 
+                let songs = response.songs; 
+                console.log("DEBUGGG: ALL SONGS: "+ songs);
+                console.log("RIGHT HERE" +songs);
+                return songs;
+            } else {
+                console.log("FAILED TO GET THE LIST PAIRS");
+            }
+        }
+
+        return asyncLoadSongs(keys);
+    }
+
     store.addSongToPlaylist = function(songKey, playlistKey) {
         async function asyncFunc(songKey, playlistKey){
         const response = await storeRequestSender.adSongToPlaylist(songKey, playlistKey)
@@ -532,6 +549,38 @@ function GlobalStoreContextProvider(props) {
         asyncQuery(queries);
     };
     
+    store.sortSongs = function() {
+
+    }
+
+
+    // type can be: 'listenersHiLo', 'listenersLoHi', 'nameAZ', 'nameZA', 'userAZ', 'userZA'
+    store.sortPlaylists = function(type) {
+        console.log("sorting: "+ type)
+        switch (type) {
+            case 'listenersHiLo':
+                this.idNamePairs.sort((a, b) => b.listeners - a.listeners);
+                break;
+            case 'listenersLoHi':
+                this.idNamePairs.sort((a, b) => a.listeners - b.listeners);
+                break;
+            case 'nameAZ':
+                this.idNamePairs.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+                break;
+            case 'nameZA':
+                this.idNamePairs.sort((a, b) => b.name.toLowerCase().localeCompare(a.name.toLowerCase()));
+                break;
+            case 'userAZ':
+                this.idNamePairs.sort((a, b) => a.userName.toLowerCase().localeCompare(b.userName.toLowerCase()));
+                break;
+            case 'userZA':
+                this.idNamePairs.sort((a, b) => b.userName.toLowerCase().localeCompare(a.userName.toLowerCase()));
+                break;
+            default:
+                console.warn('Unknown sort type:', type);
+        }
+}
+
 
     store.getPlaylistSize = function() {
         return store.currentList.songs.length;

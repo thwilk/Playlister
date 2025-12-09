@@ -49,8 +49,8 @@ const getPlaylistById = async (req, res) => {
 
     try {
         const playlist = await storedb.getPlaylistById(playlistId);
-        const data = await formatPlaylist(playlist);
-        return res.status(200).json({ success: true, playlist: data });
+        // const data = await formatPlaylist(playlist);
+        return res.status(200).json({ success: true, playlist: playlist });
     } catch (err) {
         console.error(err);
         const status = err.message === 'Forbidden' ? 403 : 404;
