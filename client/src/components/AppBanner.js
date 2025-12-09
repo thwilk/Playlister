@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react'; // Import useEffect
 import { Link } from 'react-router-dom'
 import AuthContext from '../auth';
 import { GlobalStoreContext } from '../store'
@@ -14,13 +14,19 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 
 export default function AppBanner() {
     const { auth } = useContext(AuthContext);
     const { store } = useContext(GlobalStoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
+    
+    const [showCatalog, setShowCatalog] = useState(auth.loggedIn || auth.isGuest);
+
+    useEffect(() => {
+        setShowCatalog(auth.loggedIn || auth.isGuest);
+    }, [auth.loggedIn, auth.isGuest]);
+
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -39,12 +45,18 @@ export default function AppBanner() {
         store.closeCurrentList();
     }
 
+    const handleContinueAsGuest = () => {
+        handleMenuClose();  
+        auth.continueAsGuest();
+    }
+
     const handleCatalogClick = () => {
         handleMenuClose();
         store.closeCurrentList();
     }
 
     const menuId = 'primary-search-account-menu';
+    
     const loggedOutMenu = (
         <Menu
             anchorEl={anchorEl}
@@ -63,8 +75,32 @@ export default function AppBanner() {
         >
             <MenuItem onClick={handleMenuClose}><Link to='/login/'>Login</Link></MenuItem>
             <MenuItem onClick={handleMenuClose}><Link to='/register/'>Create New Account</Link></MenuItem>
+            <MenuItem onClick={handleContinueAsGuest}>Continue As Guest</MenuItem>
         </Menu>
     );
+
+    const guestMenu = (
+        <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            id={menuId}
+            keepMounted
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            open={isMenuOpen}
+            onClose={handleMenuClose}
+        >
+            <MenuItem onClick={handleMenuClose}><Link to='/login/'>Login</Link></MenuItem>
+            <MenuItem onClick={handleMenuClose}><Link to='/register/'>Register</Link></MenuItem>
+        </Menu>
+    );
+
+
     const loggedInMenu = 
         <Menu
             anchorEl={anchorEl}
@@ -83,16 +119,18 @@ export default function AppBanner() {
         >
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
             <MenuItem onClick={handleMenuClose}><Link to='/editUser/'>Edit Account</Link></MenuItem>
-
         </Menu>        
 
     let editToolbar = "";
-    let menu = loggedOutMenu;
+    let menu = loggedOutMenu; 
+    
     if (auth.loggedIn) {
-        menu = loggedInMenu;
+        menu = loggedInMenu; 
         if (store.currentList) {
             editToolbar = <EditToolbar />;
         }
+    } else if (auth.isGuest) {
+        menu = guestMenu; 
     }
     
     function getAccountMenu(loggedIn) {
@@ -103,7 +141,7 @@ export default function AppBanner() {
         else
             return <AccountCircle />;
     }
-
+    
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -119,16 +157,16 @@ export default function AppBanner() {
                     >
                         ⌂
                     </Button>
-
-                    <Button
-                        component={Link}
-                        to="/songCatalog"
-                        color="inherit"
-                        onClick={handleCatalogClick}
-                        sx={{ fontSize: "1.5rem", textTransform: "none" }}
-                    >
-                        Catalog
-                    </Button>
+                    
+                        <Button
+                            component={Link}
+                            to="/songCatalog"
+                            color="inherit"
+                            onClick={handleCatalogClick}
+                            sx={{ fontSize: "1.5rem", textTransform: "none" }}
+                        >
+                            Catalog
+                        </Button>
                 </Box>
 
 
@@ -145,7 +183,7 @@ export default function AppBanner() {
                             onClick={handleProfileMenuOpen}
                             color="inherit"
                         >
-                            {getAccountMenu(auth.loggedIn)}
+                            {getAccountMenu(auth.loggedIn)} 
                         </IconButton>
                     </Box>
     

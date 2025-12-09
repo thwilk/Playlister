@@ -1,6 +1,28 @@
 const jwt = require("jsonwebtoken")
 
 function authManager() {
+    allowGuest = (req, res, next) => {
+        try {
+            const token = req.cookies.token;
+            
+            // If there's no token, they are a guest.
+            if (!token) {
+                req.userId = null;
+                return next();
+            }
+
+            // If there is a token, verify it.
+            const verified = jwt.verify(token, process.env.JWT_SECRET);
+            req.userId = verified.userId;
+            
+            next();
+        } catch (err) {
+            // If the token is invalid/expired, treat them as a guest.
+            req.userId = null;
+            next();
+        }
+    }
+
     verify = (req, res, next) => {
         try {
             const token = req.cookies.token;

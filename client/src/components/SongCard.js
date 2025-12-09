@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect} from 'react'
 import { GlobalStoreContext } from '../store'
+import GlobalAuthContext  from '../auth'; 
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
@@ -8,7 +9,10 @@ import MenuItem from '@mui/material/MenuItem';
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
+    const { auth } = useContext(GlobalAuthContext); 
     const { song, index, usersPlaylists, showPlaylistMenuProp = false } = props;
+    
+    const isGuest = auth.isGuest;
 
     useEffect(() => {
         setShowPlaylistMenu(showPlaylistMenuProp);
@@ -108,52 +112,57 @@ function SongCard(props) {
             <div style={{ fontSize: "0.9rem", color: "gray" }}>
                 Listens: {song.listens || 0}
             </div>
-            <IconButton
-                size="small"
-                onClick={handleMenuOpen}
-                sx={{ position: "absolute", top: 5, right: 5 }}
-            >
-                <MoreVertIcon fontSize="small" />
-            </IconButton>
-
-            <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
-                {showPlaylistMenu && (
-                    <div
-                        style={{
-                            maxHeight: "200px",
-                            overflowY: "auto",
-                            borderLeft: "1px solid #ddd",
-                            marginLeft: "15px",
-                            paddingLeft: "10px"
-                        }}
+            
+            {isGuest && (
+                <>
+                    <IconButton
+                        size="small"
+                        onClick={handleMenuOpen}
+                        sx={{ position: "absolute", top: 5, right: 5 }}
                     >
-                        {usersPlaylists.length === 0 ? (
-                            <MenuItem disabled>No playlists found</MenuItem>
-                        ) : (
-                            usersPlaylists.map((p) => (
-                                <MenuItem
-                                    key={p._id}
-                                    onClick={() => {
-                                        handleAddToPlaylist(p._id, song);
-                                        handleMenuClose();
-                                    }}
-                                >
-                                    {p.name}
-                                </MenuItem>
-                            ))
+                        <MoreVertIcon fontSize="small" />
+                    </IconButton>
+
+                    <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
+                        {showPlaylistMenu && (
+                            <div
+                                style={{
+                                    maxHeight: "200px",
+                                    overflowY: "auto",
+                                    borderLeft: "1px solid #ddd",
+                                    marginLeft: "15px",
+                                    paddingLeft: "10px"
+                                }}
+                            >
+                                {usersPlaylists.length === 0 ? (
+                                    <MenuItem disabled>No playlists found</MenuItem>
+                                ) : (
+                                    usersPlaylists.map((p) => (
+                                        <MenuItem
+                                            key={p._id}
+                                            onClick={() => {
+                                                handleAddToPlaylist(p._id, song);
+                                                handleMenuClose();
+                                            }}
+                                        >
+                                            {p.name}
+                                        </MenuItem>
+                                    ))
+                                )}
+                            </div>
                         )}
-                    </div>
-                )}
-                <MenuItem onClick={() => setShowPlaylistMenu((prev) => !prev)}>
-                    Add to Playlist
-                </MenuItem>
-                <MenuItem onClick={() => { handleEditSong(song, index); handleMenuClose(); }}>
-                    Edit Song
-                </MenuItem>
-                <MenuItem onClick={() => { handleDeleteSong(song, index); handleMenuClose(); }}>
-                    Delete Song
-                </MenuItem>
-            </Menu>
+                        <MenuItem onClick={() => setShowPlaylistMenu((prev) => !prev)}>
+                            Add to Playlist
+                        </MenuItem>
+                        <MenuItem onClick={() => { handleEditSong(song, index); handleMenuClose(); }}>
+                            Edit Song
+                        </MenuItem>
+                        <MenuItem onClick={() => { handleDeleteSong(song, index); handleMenuClose(); }}>
+                            Delete Song
+                        </MenuItem>
+                    </Menu>
+                </>
+            )}
         </div>
     );
 }

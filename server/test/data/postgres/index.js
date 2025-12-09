@@ -1,6 +1,8 @@
 const dotenv = require('dotenv').config({ path: __dirname + '/../../../.env' });
 const sequelize = require('../../../db/index');
 const { User, Playlist } = require('../../../models/association');
+const Song = require('../../../models/song-schema');
+
 const testData = require('../example-db-data-psql.json');
 
 async function clearTable(model, tableName) {
@@ -24,19 +26,23 @@ async function fillTable(model, tableName, data) {
 async function resetPostgres() {
     console.log("Resetting the Postgres DB");
 
-
+    // clear in order: Playlist → Song → User
     await clearTable(Playlist, "Playlist");
+    await clearTable(Song, "Song");
     await clearTable(User, "User");
 
-
+    // fill Users first
     await fillTable(User, "User", testData.users);
 
+    // fill Songs
+    await fillTable(Song, "Song", testData.songs);
+
+    // fill Playlists (songKeys must reference actual Song IDs now)
     await fillTable(Playlist, "Playlist", testData.playlists);
 
     console.log("Database reset complete");
 }
 
-
-sequelize.sync({ force: true }) 
+sequelize.sync({ force: true })
     .then(() => resetPostgres())
     .catch(e => console.error('Sequelize sync error', e));

@@ -41,8 +41,6 @@ const deletePlaylist = async (req, res) => {
 };
 
 const getPlaylistById = async (req, res) => {
-    const userId = auth.verifyUser(req);
-    if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
 
     const playlistId = parseInt(req.params.id, 10);
     if (!playlistId) return res.status(400).json({ success: false, error: 'Playlist ID required' });

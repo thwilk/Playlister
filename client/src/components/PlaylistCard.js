@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
+import GlobalAuthContext from '../auth'
 import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -20,9 +21,12 @@ import Avatar from '@mui/material/Avatar';
 
 function PlaylistCard(props) {
     const { store } = useContext(GlobalStoreContext);
+    const { auth } = useContext(GlobalAuthContext);
     const [editActive, setEditActive] = useState(false);
     const [text, setText] = useState("");
     const { idNamePair } = props;
+    
+    const isGuest = auth.isGuest;
 
     function handleLoadList(event, id) {
         console.log("handleLoadList for " + id);
@@ -34,6 +38,7 @@ function PlaylistCard(props) {
 
     function handleToggleEdit(event) {
         event.stopPropagation();
+        if (isGuest) return;
         setEditActive((prev) => {
             if (!prev) store.setIsListNameEditActive();
             return !prev;
@@ -43,6 +48,7 @@ function PlaylistCard(props) {
 
     async function handleDeleteList(event, id) {
         event.stopPropagation();
+        if (isGuest) return;
         //let _id = event.target.id;
         //_id = ("" + _id).substring("delete-list-".length);
         store.markListForDeletion(id);
@@ -51,6 +57,7 @@ function PlaylistCard(props) {
 
     async function handleCopyList(event, id) {
         event.stopPropagation();
+        if (isGuest) return;
         //todo
         // store.copyPlaylist(id);
     }
@@ -140,15 +147,29 @@ function PlaylistCard(props) {
                 <IconButton onClick={(e) => handlePlayList(e, idNamePair._id)} aria-label="play">
                     <PlayArrowIcon />
                 </IconButton>
-                <IconButton onClick={(e) => handleCopyList(e, idNamePair._id)} aria-label="copy">
-                    <ContentCopyIcon />
-                </IconButton>
-                <IconButton onClick={handleToggleEdit} aria-label="edit">
-                    <EditIcon />
-                </IconButton>
-                <IconButton onClick={(e) => handleDeleteList(e, idNamePair._id)} aria-label="delete">
-                    <DeleteIcon />
-                </IconButton>
+                
+                {isGuest && (
+                    <>
+                        <IconButton 
+                            onClick={(e) => handleCopyList(e, idNamePair._id)} 
+                            aria-label="copy"
+                        >
+                            <ContentCopyIcon />
+                        </IconButton>
+                        <IconButton 
+                            onClick={handleToggleEdit} 
+                            aria-label="edit"
+                        >
+                            <EditIcon />
+                        </IconButton>
+                        <IconButton 
+                            onClick={(e) => handleDeleteList(e, idNamePair._id)} 
+                            aria-label="delete"
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </>
+                )}
             </Box>
         </ListItem>
         );

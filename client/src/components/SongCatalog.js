@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { GlobalStoreContext } from '../store';
+import GlobalAuthContext  from '../auth'; // ⬅️ NEW: Import Auth Context
 import SongCard from './SongCard';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -8,6 +9,7 @@ import Stack from '@mui/material/Stack';
 
 function SongCatalog() {
     const { store } = useContext(GlobalStoreContext);
+    const { auth } = useContext(GlobalAuthContext); 
     const [title, setTitle] = useState("");
     const [artist, setArtist] = useState("");
     const [year, setYear] = useState("");
@@ -34,6 +36,7 @@ function SongCatalog() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (auth.isGuest && !isQueryMode) return; 
         if (isQueryMode) {
             store.querySongs(title, artist, year);
         } else {
@@ -63,60 +66,63 @@ function SongCatalog() {
 
     return (
         <Box sx={{ p: 3 }}>
-            <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-                <Button
-                    variant={isQueryMode ? "outlined" : "contained"}
-                    color="success"
-                    onClick={() => setIsQueryMode(false)}
-                >
-                    Add New Song
-                </Button>
-                <Button
-                    variant={isQueryMode ? "contained" : "outlined"}
-                    color="primary"
-                    onClick={() => setIsQueryMode(true)}
-                >
-                    Query Songs
-                </Button>
-            </Stack>
+            {auth.isGuest && (
+                <>
+                    <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+                        <Button
+                            variant={isQueryMode ? "outlined" : "contained"}
+                            color="success"
+                            onClick={() => setIsQueryMode(false)}
+                        >
+                            Add New Song
+                        </Button>
+                        <Button
+                            variant={isQueryMode ? "contained" : "outlined"}
+                            color="primary"
+                            onClick={() => setIsQueryMode(true)}
+                        >
+                            Query Songs
+                        </Button>
+                    </Stack>
 
-            <Box
-                component="form"
-                onSubmit={handleSubmit}
-                sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 3 }}
-            >
-                <TextField
-                    label="Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    size="small"
-                />
-                <TextField
-                    label="Artist"
-                    value={artist}
-                    onChange={(e) => setArtist(e.target.value)}
-                    size="small"
-                />
-                <TextField
-                    label="Year"
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
-                    size="small"
-                />
-                {!isQueryMode && (
-                    <TextField
-                        label="YouTube ID"
-                        value={youtubeId}
-                        onChange={(e) => setYoutubeId(e.target.value)}
-                        size="small"
-                    />
-                )}
-                <Button type="submit" variant="contained">
-                    {isQueryMode ? "Search" : "Submit"}
-                </Button>
-            </Box>
-
-            {/* Sorting buttons */}
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit}
+                        sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 3 }}
+                    >
+                        <TextField
+                            label="Title"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            size="small"
+                        />
+                        <TextField
+                            label="Artist"
+                            value={artist}
+                            onChange={(e) => setArtist(e.target.value)}
+                            size="small"
+                        />
+                        <TextField
+                            label="Year"
+                            value={year}
+                            onChange={(e) => setYear(e.target.value)}
+                            size="small"
+                        />
+                        {!isQueryMode && (
+                            <TextField
+                                label="YouTube ID"
+                                value={youtubeId}
+                                onChange={(e) => setYoutubeId(e.target.value)}
+                                size="small"
+                            />
+                        )}
+                        <Button type="submit" variant="contained">
+                            {isQueryMode ? "Search" : "Submit"}
+                        </Button>
+                    </Box>
+                </>
+            )}
+            
             <Stack direction="row" spacing={1} sx={{ mb: 3, flexWrap: "wrap" }}>
                 {["listens-hi","listens-lo","playlists-hi","playlists-lo",
                   "title-az","title-za","artist-az","artist-za","year-hi","year-lo"].map((c) => (
@@ -126,7 +132,6 @@ function SongCatalog() {
                 ))}
             </Stack>
 
-            {/* Song list */}
             {store.songs && store.songs.length > 0 ? (
                 <Stack spacing={1}>
                     {store.songs.map((song, index) => (
@@ -134,7 +139,7 @@ function SongCatalog() {
                             key={song._id || song.id}
                             song={song}
                             index={index}
-                            usersPlaylists={userPlaylist || []} // restores playlist functionality
+                            usersPlaylists={userPlaylist || []}
                         />
                     ))}
                 </Stack>

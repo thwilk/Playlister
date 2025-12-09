@@ -11,14 +11,16 @@ export const AuthActionType = {
     LOGIN_USER: "LOGIN_USER",
     LOGOUT_USER: "LOGOUT_USER",
     REGISTER_USER: "REGISTER_USER",
-    EDIT_USER: "EDIT_USER"
+    EDIT_USER: "EDIT_USER",
+    CONTINUE_GUEST: "CONTINUE_GUEST"
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
         loggedIn: false,
-        errorMessage: null
+        errorMessage: null,
+        isguest: false
     });
     const history = useHistory();
 
@@ -33,35 +35,48 @@ function AuthContextProvider(props) {
                 return setAuth({
                     user: payload.user,
                     loggedIn: payload.loggedIn,
-                    errorMessage: null
+                    errorMessage: null,
+                    isguest: false
                 });
             }
             case AuthActionType.LOGIN_USER: {
                 return setAuth({
                     user: payload.user,
                     loggedIn: payload.loggedIn,
-                    errorMessage: payload.errorMessage
+                    errorMessage: payload.errorMessage,
+                    isguest: false
                 })
             }
             case AuthActionType.LOGOUT_USER: {
                 return setAuth({
                     user: null,
                     loggedIn: false,
-                    errorMessage: null
+                    errorMessage: null,
+                    isguest: false
                 })
             }
             case AuthActionType.REGISTER_USER: {
                 return setAuth({
                     user: payload.user,
                     loggedIn: payload.loggedIn,
-                    errorMessage: payload.errorMessage
+                    errorMessage: payload.errorMessage,
+                    isguest: false
                 })
             }
             case AuthActionType.EDIT_USER: {
                 return setAuth({
                     user: payload.user,
                     loggedIn: payload.loggedIn,
-                    errorMessage: payload.errorMessage
+                    errorMessage: payload.errorMessage,
+                    isguest: false
+                });
+            }
+            case AuthActionType.CONTINUE_GUEST: {
+                return setAuth({
+                    user: null,
+                    loggedIn: false,
+                    errorMessage: payload.errorMessage,
+                    isguest: true
                 });
             }
             default:
@@ -82,6 +97,19 @@ function AuthContextProvider(props) {
         }
     }
 
+    auth.continueAsGuest = async function() {
+        authReducer({
+            type: AuthActionType.CONTINUE_GUEST,
+            payload: {
+                user: null,
+                loggedIn: false,
+                errorMessage: null,
+                isguest: true
+            }
+        })
+    }
+
+    
     auth.registerUser = async function(userName, email, profileAvatar, password, passwordVerify) {
         console.log("REGISTERING USER");
         try{   
