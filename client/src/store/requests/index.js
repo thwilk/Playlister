@@ -209,6 +209,30 @@ export const getSongs = () => {
 
 }
 
+export const querySongs = (title, artist, year) => {
+  console.log("IM GAY:"+ title + artist + year)
+  return fetch(`${url2}/querySongs/`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      title: title,
+      artist: artist, 
+      year: year
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    return res.json();
+  })
+  .catch(err => {
+    console.error("Error getting songs:", err);
+  });
+
+}
+
 export const createSong = (title, artist, year, youtubeId) => {
   return fetch(`${url2}/song`, {
     method: 'POST',
@@ -231,7 +255,24 @@ export const createSong = (title, artist, year, youtubeId) => {
   });
 }
 
-
+export const adSongToPlaylist = (songKey, playlistId) =>{
+  return fetch(`${url}/playlist/${playlistId}/addsong`, {
+    method: 'PUT',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      songId: songKey
+    })
+  }) .then(res => {
+    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    return res.json();
+  })
+  .catch(err => {
+    console.error("Error making song:", err);
+  });
+}
 
 const apis = {
     createPlaylist,
@@ -243,9 +284,10 @@ const apis = {
 
     getPlaylistQuery,
 
-
+    adSongToPlaylist,
     getSongs,
     createSong,
+    querySongs
 }
 
 export default apis

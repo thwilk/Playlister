@@ -110,14 +110,11 @@ const updatePlaylist = async (playlistId, userId, body) => {
 };
 
 const addSongToPlaylist = async (playlistId, songId) => {
-    const playlist = await Playlist.findById(playlistId);
+    const playlist = await Playlist.findByPk(playlistId);
 
-    playlist.songs.push(songId);
+    playlist.songKeys.push(songId);
     await playlist.save();
-
     return playlist;
-
-
 }
 
 module.exports = {

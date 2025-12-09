@@ -33,8 +33,7 @@ function SongCard(props) {
 
 
     const handleAddToPlaylist = (playlistId, song) => {
-        //rodo 
-        
+        store.addSongToPlaylist(song._id, playlistId)
     };
 
     const handleEditSong = (song, index) => {

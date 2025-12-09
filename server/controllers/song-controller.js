@@ -109,6 +109,23 @@ const addListen = async (req, res) =>{
         return res.status(401).json({ success: false, errorMessage: error.message });
     }
 }
+const querySongs = async (req, res) => {
+
+    const {title, artist, year} = req.body;
+    try {
+        const songs = await songdb.querySongs(title, artist, year);
+
+        if(!songs){
+            return res.status(404).json({ success: false, errorMessage: "No songs like that " });
+        }
+
+        return res.status(200).json({ success: true, data: songs });
+    }
+    catch (error) {
+        return res.status(401).json({ success: false, errorMessage: error.message });
+    }
+
+}
 
 
 module.exports = {
@@ -117,5 +134,6 @@ module.exports = {
     getSong,
     getSongs,
     updateSong,
-    addListen
+    addListen,
+    querySongs
 } 

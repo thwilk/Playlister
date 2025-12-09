@@ -1,6 +1,34 @@
 const Song = require('../models/song-schema');
+const { Op } = require('sequelize');
 
 
+
+
+const querySongs = async(title, artist, year) => {
+        try {
+            // build dynamic where clause
+            const whereClause = {};
+            if (title) {
+                whereClause.title = { [Op.like]: `%${title}%` }; // partial match
+            }
+            if (artist) {
+                whereClause.artist = { [Op.like]: `%${artist}%` }; // partial match
+            }
+            if (year) {
+                whereClause.year = year; // exact match
+            }
+    
+            const songs = await Song.findAll({
+                where: whereClause,
+                order: [['title', 'ASC']], // optional: order by title
+            });
+    
+            return songs; // returns array of song objects
+        } catch (err) {
+            console.error("Failed to query songs:", err);
+            return [];
+        }
+}
 const findSongById = async (id) => {
     const song = await Song.findByPk(id);
     return { 
@@ -86,5 +114,6 @@ module.exports = {
     updateSong,
     getAllSongs,
     deleteSong,
-    addListen
+    addListen,
+    querySongs
 }

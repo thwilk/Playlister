@@ -143,11 +143,17 @@ const updatePlaylist = async (req, res) => {
 };
 
 const addSongToPlaylist = async (req, res) => {
-    const userId = auth.verifyUser(req);
-    if (!userId) return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
-    const { songId, playlistId } = req.body;
+    // const userId = await auth.verifyUser(req);
+    // if (!userId) 
+    //     return res.status(401).json({ success: false, errorMessage: 'UNAUTHORIZED' });
+    
+    const songId  = req.body.songId;
+    const playlistId  = parseInt(req.params.id, 10);
 
-    const playlist = await addSongToPlaylist(songId, playlistId);
+    console.log("WHATTT" + playlistId)
+    console.log("GAYYYY" + songId)
+
+    const playlist = await storedb.addSongToPlaylist(playlistId, songId);
     const data = await formatPlaylist(playlist)
     return res.status(200).json({
         success: true,
@@ -166,5 +172,6 @@ module.exports = {
     getPlaylistForUser,
     getPlaylists,
     updatePlaylist,
-    getPlaylistsWithQueries
+    getPlaylistsWithQueries,
+    addSongToPlaylist
 };

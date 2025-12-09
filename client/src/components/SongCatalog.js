@@ -37,16 +37,12 @@ function SongCatalog() {
         e.preventDefault()
 
         if (isQueryMode) {
-            // Query mode
             store.querySongs(title, artist, year)
         } else {
             // Add mode
             store.addSongToCatalog(title, artist, parseInt(year), "noId's")
         }
 
-        setTitle("")
-        setArtist("")
-        setYear("")
     }
 
     return (

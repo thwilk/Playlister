@@ -10,6 +10,7 @@ router.get('/song/:id', auth.verify, song.getSong)
 router.delete('/song/:id', auth.verify, song.deleteSong)
 router.post('/song', auth.verify, song.createSong)
 router.patch('/song/addListen/:id', song.addListen)
+router.patch('/querySongs', song.querySongs)
 
 
 module.exports = router;

@@ -46,17 +46,6 @@ const HomeScreen = () => {
 
     return (
         <div id="playlist-selector">
-            <div id="list-selector-heading">
-                <Fab
-                    sx={{ transform: "translate(0%, 0%)" }}
-                    color="primary"
-                    aria-label="add"
-                    onClick={handleCreateNewList}
-                >
-                    <AddIcon />
-                </Fab>
-                Your Playlists
-            </div>
 
             <Box sx={{ display: "flex", height: "100%", minHeight: "500px" }} id="HomeWrapper">
                 <Box sx={{ flex: 1, bgcolor: "background.paper", p: 2 }} id="Queries">

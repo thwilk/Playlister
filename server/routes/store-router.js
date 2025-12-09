@@ -17,5 +17,6 @@ router.post('/playlistquery/', store.getPlaylistsWithQueries)
 router.get('/playlistForUser', auth.verify, store.getPlaylistForUser)
 router.get('/playlists', auth.verify, store.getPlaylists)
 router.put('/playlist/:id', auth.verify, store.updatePlaylist)
+router.put('/playlist/:id/addsong', auth.verify, store.addSongToPlaylist)
 
 module.exports = router
